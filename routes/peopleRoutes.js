@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 // Create a new person
-router.post("/", createPerson);
+router.post("/create", createPerson);
 
 // Get all people
 router.get("/", getPeople);

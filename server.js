@@ -1,5 +1,4 @@
 import express from "express";
-const app = express();
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -8,23 +7,17 @@ import cookieParser from "cookie-parser";
 import peopleRoutes from "./routes/peopleRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
-// import database from "./config/database.js";
-// import router from "./routes.js";
+const app = express();
 
-// app.set('trust proxy', true);
-
-// Setting up port number
-const PORT = process.env.PORT || 4000;
-
-// Loading environment variables from .env file
+// Load environment variables from .env file
 dotenv.config();
 
-// Connecting to database
+// Connect to the database
 connect();
-// database.connect();
 
 // Middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Instead of bodyParser.urlencoded
 app.use(cookieParser());
 app.use(
   cors({
@@ -33,35 +26,14 @@ app.use(
   })
 );
 
-// app.use('/webhook', webhookRouter); // before bodyParser.json [MUST]
-app.use(express.json());
-// app.use(clientMiddleware());
-const corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use(cors(corsOptions));
-app.use(
-  bodyParser.json({
-    limit: "50mb",
-  })
-);
-app.use(
-  bodyParser.urlencoded({
-    limit: "50mb",
-    extended: false,
-  })
-);
-
-// app.use("/", router);
+// Routes
 app.use("/auth", userRoutes);
 app.use("/people", peopleRoutes);
 
-const port = 3300;
+const PORT = process.env.PORT || 3300;
 
-const server = app.listen(process.env.PORT || port, () => {
-  console.log(`Server now up and running on port ${port}`);
+const server = app.listen(PORT, () => {
+  console.log(`Server now up and running on port ${PORT}`);
 });
 
-// module.exports = server;
 export default server;
