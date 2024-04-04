@@ -1,10 +1,10 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import otpGenerator from "otp-generator";
-import mailSender from "../utils/mailSender";
-import { passwordUpdated } from "../mail/templates/passwordUpdate";
-import User from "../models/User";
-import OTP from "../models/OTP";
+// import mailSender from "../utils/mailSender";
+// import { passwordUpdated } from "../mail/templates/passwordUpdate";
+import User from "../models/User.js";
+// import OTP from "../models/OTP";
 import dotenv from "dotenv";
 
 dotenv.config();

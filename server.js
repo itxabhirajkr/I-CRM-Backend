@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import connect from "./config/database.js";
 import cookieParser from "cookie-parser";
 import peopleRoutes from "./routes/peopleRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 // import database from "./config/database.js";
 // import router from "./routes.js";
@@ -53,6 +54,7 @@ app.use(
 );
 
 // app.use("/", router);
+app.use("/auth", userRoutes);
 app.use("/people", peopleRoutes);
 
 const port = 3300;

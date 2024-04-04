@@ -60,6 +60,6 @@ const userSchema = new Schema(
 );
 
 // Export the Mongoose model for the user schema, using the name "user"
-const User = model("User", userSchemaSchema);
+const User = model("User", userSchema);
 
 export default User;
