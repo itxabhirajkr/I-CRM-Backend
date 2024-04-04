@@ -1,0 +1,87 @@
+import mongoose from "mongoose";
+
+const { Schema, model } = mongoose;
+
+// Define Resource sub-schema
+const resourceSchema = new Schema({
+  personId: {
+    type: Schema.Types.ObjectId,
+    ref: "Person",
+    required: true,
+  },
+  defaultAllocation: {
+    type: Number,
+    enum: [5, 10, 15, 20, 25, 30, 35, 40],
+    required: true,
+  },
+  startDate: Date,
+  endDate: Date,
+  acquisitionPersonId: {
+    type: Schema.Types.ObjectId,
+    ref: "People",
+  },
+  billability: {
+    type: String,
+    enum: ["Billable", "Not Billable", "Shadow"],
+    required: true,
+  },
+  shadowOf: {
+    type: Schema.Types.ObjectId,
+    ref: "Resource",
+  },
+  billingRate: {
+    type: Number,
+    validate: {
+      validator: function (value) {
+        // Non-zero positive value required if Billability is Billable
+        return !(this.billability === "Billable" && (!value || value <= 0));
+      },
+      message:
+        "Billing rate must be a non-zero positive value if Billability is Billable",
+    },
+  },
+  billableHours: [
+    {
+      week: Number,
+      hours: Number,
+    },
+  ],
+});
+
+// Define Project schema
+const projectSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  clientId: {
+    type: Schema.Types.ObjectId,
+    ref: "Client",
+    required: true,
+  },
+  managerId: {
+    type: Schema.Types.ObjectId,
+    ref: "People",
+    required: true,
+  },
+  acquisitionPersonId: {
+    type: Schema.Types.ObjectId,
+    ref: "People",
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ["In Progress", "Cancelled", "Completed", "Yet to Start"],
+    required: true,
+  },
+  startDate: {
+    type: Date,
+    required: true,
+  },
+  endDate: Date,
+  resources: [resourceSchema],
+});
+
+const Project = model("Project", projectSchema);
+
+export default Project;
