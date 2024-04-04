@@ -10,82 +10,82 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Signup Controller for Registering Users
-// export const signup = async (req, res) => {
-//   try {
-//     const {
-//       firstName,
-//       lastName,
-//       email,
-//       password,
-//       confirmPassword,
-//       accountType,
-//       otp,
-//     } = req.body;
+export const signup = async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      accountType,
+      otp,
+    } = req.body;
 
-//     if (
-//       !firstName ||
-//       !lastName ||
-//       !email ||
-//       !password ||
-//       !confirmPassword ||
-//       !otp
-//     ) {
-//       return res.status(403).send({
-//         success: false,
-//         message: "All Fields are required",
-//       });
-//     }
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !otp
+    ) {
+      return res.status(403).send({
+        success: false,
+        message: "All Fields are required",
+      });
+    }
 
-//     if (password !== confirmPassword) {
-//       return res.status(400).json({
-//         success: false,
-//         message:
-//           "Password and Confirm Password do not match. Please try again.",
-//       });
-//     }
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Password and Confirm Password do not match. Please try again.",
+      });
+    }
 
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "User already exists. Please sign in to continue.",
-//       });
-//     }
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists. Please sign in to continue.",
+      });
+    }
 
-//     const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
-//     if (response.length === 0 || otp !== response[0].otp) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "The OTP is not valid",
-//       });
-//     }
+    const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
+    if (response.length === 0 || otp !== response[0].otp) {
+      return res.status(400).json({
+        success: false,
+        message: "The OTP is not valid",
+      });
+    }
 
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     // const approved = accountType === "Instructor" ? false : true;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // const approved = accountType === "Instructor" ? false : true;
 
-//     const user = await User.create({
-//       firstName,
-//       lastName,
-//       email,
-//       password: hashedPassword,
-//       accountType,
-//       approved,
-//       image: "",
-//     });
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      accountType,
+      approved,
+      image: "",
+    });
 
-//     return res.status(200).json({
-//       success: true,
-//       user,
-//       message: "User registered successfully",
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "User cannot be registered. Please try again.",
-//     });
-//   }
-// };
+    return res.status(200).json({
+      success: true,
+      user,
+      message: "User registered successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "User cannot be registered. Please try again.",
+    });
+  }
+};
 
 export const createUser = async (req, res) => {
   try {
