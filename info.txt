@@ -1,0 +1,2 @@
+npm start will run the local server
+npm run dev will run serverless 

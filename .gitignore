@@ -1,2 +1,6 @@
 node_modules/
 .env
+index.js
+serverless.yml
+webpack.config.cjs
+.github

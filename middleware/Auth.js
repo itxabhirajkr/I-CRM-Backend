@@ -41,9 +41,9 @@ export const auth = async (req, res, next) => {
       req.header("Authorization")?.replace("Bearer ", "");
 
     // Skip token verification for root user
-    if (req.user && req.user.userType === "ROOT") {
-      return next();
-    }
+    // if (req.user && req.user.userType === "ROOT") {
+    //   return next();
+    // }
 
     // If no token is provided, return a 401 response
     if (!token) {

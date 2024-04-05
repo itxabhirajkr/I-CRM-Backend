@@ -1,12 +1,13 @@
 import express from "express";
-import { createUser, login } from "../controllers/authController.js";
+import { createUser, login, signupRootUser } from "../controllers/authController.js";
 import { auth, isRoot } from "../middleware/Auth.js";
 
 const router = express.Router();
 
+//Registering Root user
+router.post("/createRootUser", signupRootUser);
 // Route to create a new user, restricted to root user only
 router.post("/create", auth, isRoot, createUser);
-// router.post("/create", createUser);
 
 // Route for user login
 router.post("/login", login);
