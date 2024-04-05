@@ -26,11 +26,11 @@ const peopleSchema = new Schema({
   },
   personalEmail: {
     type: String,
-    required: true,
+    required: false,
   },
   billingEmail: {
     type: String,
-    required: true,
+    required: false,
   },
   mobile: {
     type: String,
@@ -42,7 +42,7 @@ const peopleSchema = new Schema({
   },
   officialName: {
     type: String,
-    required: true,
+    required: false,
   },
   department: {
     type: String,
@@ -93,12 +93,12 @@ const peopleSchema = new Schema({
       "International Bank Transfer",
       "Via Third Party",
     ],
-    required: true,
+    required: false,
   },
   paymentMode: {
     type: String,
     enum: ["International Wire", "Wise", "NEFT", "Cheque", "Cash"],
-    required: true,
+    required: false,
   },
   panUrl: String,
   aadhaarFrontUrl: String,
