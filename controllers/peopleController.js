@@ -1,5 +1,5 @@
 import People from "../models/People.js";
-
+import APIFeatures from "../utils/apiFeatures.js";
 // Create a new person
 async function createPerson(req, res) {
   try {
@@ -12,14 +12,37 @@ async function createPerson(req, res) {
 }
 
 // Get all people
-async function getPeople(req, res) {
+// async function getPeople(req, res) {
+//   try {
+//     const people = await People.find();
+//     res.json(people);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// }
+
+const getPeople = async (req, res, next) => {
   try {
-    const people = await People.find();
-    res.json(people);
+    const features = new APIFeatures(People.find(), req.query)
+      .search()
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    const people = await features.query;
+
+    res.status(200).json({
+      status: "success",
+      results: people.length,
+      data: {
+        people,
+      },
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
-}
+};
 
 // Get a specific person by ID
 async function getPersonById(req, res) {

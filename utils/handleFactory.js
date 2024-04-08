@@ -6,6 +6,7 @@ export const getAll = (Model) => async (req, res, next) => {
     let filter = {};
 
     const features = new APIFeatures(Model.find(filter), req.query)
+      .search()
       .filter()
       .sort()
       .limitFields()

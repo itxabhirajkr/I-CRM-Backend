@@ -6,7 +6,7 @@ import connect from "./config/database.js";
 import cookieParser from "cookie-parser";
 import peopleRoutes from "./routes/peopleRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-
+import clientRoutes from "./routes/clientRoutes.js";
 const app = express();
 
 // Load environment variables from .env file
@@ -29,7 +29,7 @@ app.use(
 // Routes
 app.use("/auth", userRoutes);
 app.use("/people", peopleRoutes);
-
+app.use("/client", clientRoutes);
 const PORT = process.env.PORT || 3300;
 
 const server = app.listen(PORT, () => {
