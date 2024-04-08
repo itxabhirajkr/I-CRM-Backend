@@ -20,10 +20,10 @@ class APIFeatures {
 
 
   search() {
-    const keyword = this.queryStr.keyword
+    const keyword = this.queryStr.name
       ? {
           name: {
-            $regex: this.queryStr.keyword,
+            $regex: this.queryStr.name,
             $options: "i",
           },
         }
