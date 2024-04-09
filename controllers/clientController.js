@@ -4,7 +4,6 @@ import APIFeatures from "../utils/apiFeatures.js";
 export const getAllClients = async (req, res, next) => {
   try {
     const features = new APIFeatures(Client.find(), req.query)
-      .search()
       .filter()
       .sort()
       .limitFields()
