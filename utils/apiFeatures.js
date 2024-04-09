@@ -19,19 +19,19 @@ class APIFeatures {
   }
 
 
-  search() {
-    const keyword = this.queryStr.name
-      ? {
-          name: {
-            $regex: this.queryStr.name,
-            $options: "i",
-          },
-        }
-      : {};
+  // search() {
+  //   const keyword = this.queryStr.name
+  //     ? {
+  //         name: {
+  //           $regex: this.queryStr.name,
+  //           $options: "i",
+  //         },
+  //       }
+  //     : {};
 
-    this.query = this.query.find({ ...keyword });
-    return this;
-  }
+  //   this.query = this.query.find({ ...keyword });
+  //   return this;
+  // }
 
   sort() {
     if (this.queryString.sort) {

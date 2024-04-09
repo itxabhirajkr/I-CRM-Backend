@@ -24,7 +24,7 @@ async function createPerson(req, res) {
 const getPeople = async (req, res, next) => {
   try {
     const features = new APIFeatures(People.find(), req.query)
-      .search()
+      // .search()
       .filter()
       .sort()
       .limitFields()
