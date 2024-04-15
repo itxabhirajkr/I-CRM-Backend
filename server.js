@@ -23,6 +23,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );
@@ -31,7 +32,7 @@ app.use(
 app.use("/auth", userRoutes);
 app.use("/people", peopleRoutes);
 app.use("/client", clientRoutes);
-app.use("/project", projectRoutes );
+app.use("/project", projectRoutes);
 const PORT = process.env.PORT || 3300;
 
 const server = app.listen(PORT, () => {
