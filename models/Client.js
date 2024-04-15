@@ -7,7 +7,7 @@ const clientSchema = new Schema({
   acquisitionPersonId: {
     type: Schema.Types.ObjectId,
     ref: "People",
-    required: true,
+    required: false,
   },
   primaryContactPerson: {
     type: String,
