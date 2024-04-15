@@ -35,7 +35,9 @@ const getPeople = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       results: people.length,
-      data: people
+      data: {
+        people,
+      },
     });
   } catch (error) {
     console.log(error);
