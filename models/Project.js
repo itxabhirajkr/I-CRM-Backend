@@ -46,6 +46,21 @@ const resourceSchema = new Schema({
       hours: Number,
     },
   ],
+  overtimeAllocations: [
+    {
+      year: Number,
+      fromWeek: Number,
+      toWeek: Number,
+      hours: {
+        type: Number,
+        required: true,
+      },
+      billingRate: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
 });
 
 // Define Project schema
