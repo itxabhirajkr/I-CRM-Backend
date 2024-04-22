@@ -52,7 +52,7 @@ const userSchema = new Schema(
     },
     additionalDetails: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      // required: true,
       ref: "Profile",
     },
     image: {
