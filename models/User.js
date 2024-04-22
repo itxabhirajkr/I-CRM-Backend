@@ -50,6 +50,11 @@ const userSchema = new Schema(
     resetPasswordExpires: {
       type: Date,
     },
+    additionalDetails: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Profile",
+    },
     image: {
       type: String,
     },

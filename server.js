@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true })); // Instead of bodyParser.urlenc
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "true",
+    origin: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })

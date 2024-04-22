@@ -5,6 +5,7 @@ import otpGenerator from "otp-generator";
 // import { passwordUpdated } from "../mail/templates/passwordUpdate";
 import User from "../models/User.js";
 // import OTP from "../models/OTP";
+import Profile from "../models/Profile.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -54,7 +55,13 @@ export const signupRootUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     // const approved = accountType === "Instructor" ? false : true;
-
+      // Create the Additional Profile For User
+      const profileDetails = await Profile.create({
+        gender: null,
+        dateOfBirth: null,
+        about: null,
+        contactNumber: null,
+      })
     const user = await User.create({
       firstName,
       lastName,
@@ -62,6 +69,7 @@ export const signupRootUser = async (req, res) => {
       password: hashedPassword,
       userType,
       // approved,
+      additionalDetails: profileDetails._id,
       image: "",
     });
 
@@ -173,7 +181,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate("additionalDetails");
 
     if (!user) {
       return res.status(401).json({

@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-// Define Resource sub-schema
+// Define Resource sub-schema..]1u2
 const resourceSchema = new Schema({
   personId: {
     type: Schema.Types.ObjectId,
-    ref: "Person",
+    ref: "People",
     required: true,
   },
   defaultAllocation: {
