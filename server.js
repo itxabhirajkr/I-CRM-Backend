@@ -8,6 +8,7 @@ import peopleRoutes from "./routes/peopleRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
+import profileRoutes from "./routes/profileRoutes.js";
 const app = express();
 
 // Load environment variables from .env file
@@ -30,6 +31,7 @@ app.use(
 
 // Routes
 app.use("/auth", userRoutes);
+app.use("/profile", profileRoutes);
 app.use("/people", peopleRoutes);
 app.use("/client", clientRoutes);
 app.use("/project", projectRoutes);

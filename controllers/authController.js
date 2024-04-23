@@ -9,6 +9,16 @@ import Profile from "../models/Profile.js";
 import dotenv from "dotenv";
 
 dotenv.config();
+export const fakeApi = async (req,res)=> {
+  try {
+     return res.status(200).json({
+      success: true,
+      message: "OK",
+    });; 
+  } catch (error) {
+     console.log(error)
+  }
+}
 
 // Signup Controller for Registering Root User
 export const signupRootUser = async (req, res) => {
