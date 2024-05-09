@@ -77,6 +77,77 @@ const clientSchema = new Schema({
       ref: "ServiceAgreement",
     },
   ],
+  source: {
+    type: String,
+    enum: [
+      "UPWORK",
+      "LINKEDIN",
+      "EXTERNAL_LEAD",
+      "SUBSIDIARY",
+      "REFERRENCE",
+      "ZOOMINFO",
+      "PERSONAL_NETWORK",
+    ],
+  },
+  manager: {
+    type: Schema.Types.ObjectId,
+    ref: "People",
+  },
+  address: String,
+  country: String,
+  paymentChannel: {
+    type: String,
+    enum: [
+      "WISE",
+      "WISE_ACH",
+      "XE",
+      "UPWORK",
+      "AIRWALLEX",
+      "PAYPAL",
+      "INTERNATIONAL_WIRE",
+      "NEFT/UPI",
+      "CHEQUE_INR",
+      "CASH_INR",
+      "CASH_USD",
+    ],
+  },
+  receivingAccount: {
+    type: String,
+    enum: ["IOB_1173", "IDFC_3481", "ICIC_XXX"],
+  },
+  receivingCurrency: {
+    type: String,
+    enum: ["INR", "OTH"],
+  },
+  invoicePrefix: String,
+  invoiceFrequency: {
+    type: String,
+    enum: [
+      "WEEKLY_EVERY_MONDAY",
+      "MONTHLY_DAY_AFTER_LAST_SUNDAY",
+      "MONTHLY_DAY_AFTER_FIRST_SUNDAY",
+      "MONTHLY_DAY_AFTER_THIRD_SUNDAY",
+      "MONTHLY_DAY_AFTER_FOURTH_SUNDAY",
+      "MONTHLY_DAY_AFTER_SECOND_SUNDAY",
+      "FORTNIGHTLY_FIRST_AND_THIRD_MONDAY",
+      "FORTNIGHTLY_SECOND_AND_FOURTH_MONDAY",
+      "FORTNIGHTLY_MONDAY_EVEN_WEEKS",
+      "FORTNIGHTLY_MONDAY_ODD_WEEKS",
+    ],
+  },
+  invoiceDelivery: {
+    type: String,
+    enum: ["AUTOMATIC_TO_EMAIL", "AUTOMATIC_VIA_ASANA", "MANUAL"],
+  },
+  invoiceFollowupPlan: {
+    type: String,
+    enum: ["7_15", "15_20", "25_30"],
+  },
+  invoiceDisplayCurrencies: {
+    type: [String],
+    enum: ["AUD", "NZD", "INR"],
+    default: [],
+  },
 });
 
 const Client = model("Client", clientSchema);
