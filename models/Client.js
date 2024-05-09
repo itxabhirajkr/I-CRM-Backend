@@ -27,10 +27,10 @@ const clientSchema = new Schema({
     type: String,
     required: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
+  // password: {
+  //   type: String,
+  //   required: true,
+  // },
   primaryContactNumber: {
     type: String,
     required: true,

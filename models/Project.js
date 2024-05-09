@@ -5,7 +5,7 @@ const { Schema, model } = mongoose;
 // Define Resource sub-schema..]1u2
 const resourceSchema = new Schema({
   personId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "People",
     required: true,
   },
@@ -17,7 +17,7 @@ const resourceSchema = new Schema({
   startDate: Date,
   endDate: Date,
   acquisitionPersonId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "People",
   },
   billability: {
@@ -70,17 +70,17 @@ const projectSchema = new Schema({
     required: true,
   },
   clientId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "Client",
     required: true,
   },
   managerId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "People",
     required: true,
   },
   acquisitionPersonId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "People",
     required: true,
   },
