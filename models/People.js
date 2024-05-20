@@ -3,6 +3,62 @@ import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
 const peopleSchema = new Schema({
+      // Define the name field with type String, required, and trimmed
+      firstName: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      lastName: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      // Define the email field with type String, required, and trimmed
+      email: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+  
+      // Define the password field with type String and required
+      password: {
+        type: String,
+        required: true,
+      },
+  
+      userType: {
+        type: String,
+        enum: [
+          "ROOT",
+          "SALES_MANAGER",
+          "HR",
+          "PROJECT_MANAGER",
+          "CLIENT",
+          "REFERRAL_PARTNER",
+          "FINANCE_MANAGER",
+          "CONTRACTOR",
+        ],
+        required: true,
+      },
+  
+      token: {
+        type: String,
+      },
+      resetPasswordExpires: {
+        type: Date,
+      },
+      additionalDetails: {
+        type: mongoose.Schema.Types.ObjectId,
+        // required: true,
+        ref: "Profile",
+      },
+      image: {
+        type: String,
+      },
+  
+      // Add timestamps for when the document is created and last modified
+    
   nature: {
     type: String,
     enum: [
@@ -115,7 +171,9 @@ const peopleSchema = new Schema({
   bankStatementFolderUrl: String,
   invoiceFolderUrl: String,
   form16FolderUrl: String,
-});
+},
+{ timestamps: true }
+);
 
 const People = model("People", peopleSchema);
 

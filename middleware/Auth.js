@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import User from "../models/User.js";
+import People from "../models/User.js";
 
 dotenv.config();
 
@@ -70,7 +70,7 @@ export const auth = async (req, res, next) => {
 
 export const isRoot = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
+    const userDetails = await People.findOne({ email: req.user.email });
 
     if (userDetails.userType !== "ROOT") {
       return res.status(401).json({
@@ -88,7 +88,7 @@ export const isRoot = async (req, res, next) => {
 
 export const isSalesManager = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
+    const userDetails = await People.findOne({ email: req.user.email });
 
     if (userDetails.userType !== "SALES_MANAGER") {
       return res.status(401).json({
@@ -106,7 +106,7 @@ export const isSalesManager = async (req, res, next) => {
 
 export const isHR = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
+    const userDetails = await People.findOne({ email: req.user.email });
 
     if (userDetails.userType !== "HR") {
       return res.status(401).json({
@@ -124,7 +124,7 @@ export const isHR = async (req, res, next) => {
 
 export const isProjectManager = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
+    const userDetails = await People.findOne({ email: req.user.email });
 
     if (userDetails.userType !== "PROJECT_MANAGER") {
       return res.status(401).json({
@@ -142,7 +142,7 @@ export const isProjectManager = async (req, res, next) => {
 
 export const isClient = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
+    const userDetails = await People.findOne({ email: req.user.email });
 
     if (userDetails.userType !== "CLIENT") {
       return res.status(401).json({
@@ -160,7 +160,7 @@ export const isClient = async (req, res, next) => {
 
 export const isReferralPartner = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
+    const userDetails = await People.findOne({ email: req.user.email });
 
     if (userDetails.userType !== "REFERRAL_PARTNER") {
       return res.status(401).json({
@@ -178,7 +178,7 @@ export const isReferralPartner = async (req, res, next) => {
 
 export const isFinanceManager = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
+    const userDetails = await People.findOne({ email: req.user.email });
 
     if (userDetails.userType !== "FINANCE_MANAGER") {
       return res.status(401).json({
@@ -196,7 +196,7 @@ export const isFinanceManager = async (req, res, next) => {
 
 export const isContractor = async (req, res, next) => {
   try {
-    const userDetails = await User.findOne({ email: req.user.email });
+    const userDetails = await People.findOne({ email: req.user.email });
 
     if (userDetails.userType !== "CONTRACTOR") {
       return res.status(401).json({

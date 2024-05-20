@@ -66,10 +66,8 @@ const clientSchema = new Schema({
     type: Number,
     default: 0,
   },
-  enablePortal: {
+  GSTIN: {
     type: String,
-    enum: ["YES", "NO"],
-    required: true,
   },
   nestedFields: [
     {
