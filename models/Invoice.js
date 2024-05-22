@@ -108,15 +108,15 @@ const invoiceSchema = new mongoose.Schema({
     ref: 'Project',
     required: true
   },
-  serialNumber: {
-    type: Number,
-    required: false,
-    unique: true,
-    default: async function() {
-      const lastInvoice = await this.constructor.findOne().sort({ serialNumber: -1 });
-      return lastInvoice ? lastInvoice.serialNumber + 1 : 1;
-    }
-  },
+  // serialNumber: {
+  //   type: Number,
+  //   required: false,
+  //   unique: true,
+  //   default: async function() {
+  //     const lastInvoice = await this.constructor.findOne().sort({ serialNumber: -1 });
+  //     return lastInvoice ? lastInvoice.serialNumber + 1 : 1;
+  //   }
+  // },
   number: {
     type: String,
     required: true
