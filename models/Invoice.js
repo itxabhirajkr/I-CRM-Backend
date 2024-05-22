@@ -110,7 +110,7 @@ const invoiceSchema = new mongoose.Schema({
   },
   serialNumber: {
     type: Number,
-    required: true,
+    required: false,
     unique: true,
     default: async function() {
       const lastInvoice = await this.constructor.findOne().sort({ serialNumber: -1 });
@@ -139,7 +139,7 @@ const invoiceSchema = new mongoose.Schema({
   },
   serviceDays: {
     type: Number,
-    required: true,
+    required: false,
     default: function() {
       if (this.serviceFromDate && this.serviceToDate) {
         const diffTime = Math.abs(this.serviceToDate - this.serviceFromDate);
