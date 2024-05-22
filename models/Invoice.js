@@ -1,16 +1,15 @@
 import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
-
 // Schema for Services
 const serviceSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   description: {
     type: String,
-    required: true,
+    required: true
   },
   fromDate: Date,
   toDate: Date,
@@ -18,88 +17,96 @@ const serviceSchema = new Schema({
     type: String,
     required: function() {
       return !this.fromDate || !this.toDate;
-    },
+    }
   },
   hours: {
     type: Number,
-    required: true,
+    required: true
   },
   rate: {
     type: Number,
-    required: true,
+    required: true
   },
   discountPercent: Number,
   discountAmount: {
     type: Number,
     required: function() {
       return this.discountPercent == null;
-    },
+    }
   },
   SAC: {
     type: String,
-    enum: ["998311", "998312", "998313", "998314", "9983"],
-    required: true,
+    enum: [
+      '998311',
+      '998312',
+      '998313',
+      '998314',
+      '9983'
+    ],
+    required: true
   },
   timeTrackerReportUrl: {
     type: String,
     required: function() {
-      return this.SAC === "XX13" || this.SAC === "XX14";
-    },
+      return this.SAC === 'XX13' || this.SAC === 'XX14';
+    }
   },
   taxableAmount: {
     type: Number,
-    required: true,
+    required: true
   },
   sgstRate: {
     type: String,
-    enum: ["Nil", "9"],
-    required: true,
+    enum: ['Nil', '9'],
+    required: true
   },
   sgstAmount: {
     type: Number,
-    required: true,
+    required: true
   },
   cgstRate: {
     type: String,
-    enum: ["Nil", "9"],
-    required: true,
+    enum: ['Nil', '9'],
+    required: true
   },
   cgstAmount: {
     type: Number,
-    required: true,
+    required: true
   },
   igstRate: {
     type: String,
-    enum: ["Nil", "18"],
-    required: true,
+    enum: ['Nil', '18'],
+    required: true
   },
   igstAmount: {
     type: Number,
-    required: true,
-  },
+    required: true
+  }
 });
 
 // Schema for Adjustments
-const adjustmentSchema = new Schema({
+const adjustmentSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   amount: {
     type: Number,
-    required: true,
-  },
+    required: true
+  }
 });
 
 // Main Schema
-const invoiceSchema = new Schema({
-  clientName: {
-    type: String,
-    required: true,
+const invoiceSchema = new mongoose.Schema({
+  clientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Client', 
+    required: true
   },
-  projectName: {
-    type: String,
-    required: true,
+  projectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project',
+    required: true
   },
   serialNumber: {
     type: Number,
@@ -108,16 +115,16 @@ const invoiceSchema = new Schema({
     default: async function() {
       const lastInvoice = await this.constructor.findOne().sort({ serialNumber: -1 });
       return lastInvoice ? lastInvoice.serialNumber + 1 : 1;
-    },
+    }
   },
   number: {
     type: String,
-    required: true,
+    required: true
   },
   poNumber: String,
   date: {
     type: Date,
-    required: true,
+    required: true
   },
   serviceFromDate: Date,
   serviceToDate: Date,
@@ -127,8 +134,8 @@ const invoiceSchema = new Schema({
       validator: function(v) {
         return v.length > 0 || (this.serviceFromDate && this.serviceToDate);
       },
-      message: "Either mileStones or serviceFromDate & serviceToDate is required",
-    },
+      message: 'Either mileStones or serviceFromDate & serviceToDate is required'
+    }
   },
   serviceDays: {
     type: Number,
@@ -139,26 +146,30 @@ const invoiceSchema = new Schema({
         return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       }
       return 0;
-    },
+    }
   },
   dueDate: {
     type: Date,
-    required: true,
+    required: true
   },
   paymentLink: String,
   preparedBy: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'People',
+    required: true
   },
-  reviewedBy: [String],
+  reviewedBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'People'
+  }],
   services: {
     type: [serviceSchema],
     validate: {
       validator: function(v) {
         return v.length > 0;
       },
-      message: "Services array cannot be empty",
-    },
+      message: 'Services array cannot be empty'
+    }
   },
   adjustments: {
     type: [adjustmentSchema],
@@ -166,22 +177,22 @@ const invoiceSchema = new Schema({
       validator: function(v) {
         return v.length > 0;
       },
-      message: "Adjustments array cannot be empty",
-    },
+      message: 'Adjustments array cannot be empty'
+    }
   },
   status: {
     type: String,
     enum: [
-      "DRAFT",
-      "FINALIZED",
-      "DUE",
-      "PAID",
-      "PART_PAID_PART_DUE",
-      "PART_PAID_PART_FORGIVEN",
-      "FORGIVEN",
-      "CANCELLED_OR_VOID",
+      'DRAFT',
+      'FINALIZED',
+      'DUE',
+      'PAID',
+      'PART_PAID_PART_DUE',
+      'PART_PAID_PART_FORGIVEN',
+      'FORGIVEN',
+      'CANCELLED_OR_VOID'
     ],
-    required: true,
+    required: true
   },
   paidAmount: Number,
   forgivenAmount: Number,
@@ -191,22 +202,13 @@ const invoiceSchema = new Schema({
   paymentChannel: {
     type: String,
     enum: [
-      "WISE",
-      "WISE_ACH",
-      "XE",
-      "UPWORK",
-      "AIRWALLEX",
-      "PAYPAL",
-      "INTERNATIONAL_WIRE",
-      "NEFT/UPI",
-      "CHEQUE_INR",
-      "CASH_INR",
-      "CASH_USD",
-    ],
+      'WISE', 'WISE_ACH', 'XE', 'UPWORK', 'AIRWALLEX', 'PAYPAL', 
+      'INTERNATIONAL_WIRE', 'NEFT/UPI', 'CHEQUE_INR', 'CASH_INR', 'CASH_USD'
+    ]
   },
-  lostAmountINR: Number,
+  lostAmountINR: Number
 });
 
-const Invoice = model("Invoice", invoiceSchema);
+const Invoice = model('Invoice', invoiceSchema);
 
 export default Invoice;

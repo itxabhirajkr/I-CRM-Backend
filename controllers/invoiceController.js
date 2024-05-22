@@ -103,4 +103,83 @@ export const deleteInvoice = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+  
 };
+export const getInvoiceById = async (req, res, next) => {
+  try {
+    const invoice = await Invoice.findById(req.params.id);
+    // .populate({
+    //   path: 'client',
+    //   model: Client,
+    //   select: 'businessName billingContactPerson address email gstin placeOfSupply country'
+    // })
+    // .populate({
+    //   path: 'project',
+    //   model: Project,
+    //   select: 'name'
+    // })
+    // .populate('services');
+    console.log(invoice);
+    if (!invoice) {
+      return res
+        .status(404)
+        .json({ status: "fail", message: "Invoice not found" });
+    }
+
+    // const invoiceData = generateInvoiceData(invoice);
+    res.status(200).json({
+      status: "success",
+      data: invoice,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// export const getInvoiceByName = async (req, res, next) => {
+//   try {
+//     // Fetch the invoice by name
+//     const invoice = await Invoice.findOne({ name: req.params.name });
+
+//     if (!invoice) {
+//       return res
+//         .status(404)
+//         .json({ status: "fail", message: "Invoice not found" });
+//     }
+
+//     // Extract client and project IDs from the invoice
+//     const clientId = invoice.client;
+//     const projectId = invoice.project;
+
+//     // Fetch client and project details using their respective models
+//     const client = await Client.findById(clientId).select(
+//       "businessName billingContactPerson address email gstin placeOfSupply country"
+//     );
+//     const project = await Project.findById(projectId).select("name");
+
+//     // Fetch preparedBy and reviewedBy details
+//     const preparedBy = await User.findById(invoice.preparedBy).select("name"); // Adjust the fields as per the User model
+//     const reviewedBy = await User.find({
+//       _id: { $in: invoice.reviewedBy },
+//     }).select("name"); // Adjust the fields as per the User model
+
+//     // Structure the data as per requirements
+//     const invoiceData = generateInvoiceData({
+//       invoice,
+//       client,
+//       project,
+//       preparedBy,
+//       reviewedBy,
+//     });
+
+//     // Send the response
+//     res.status(200).json({
+//       status: "success",
+//       data: invoiceData,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+// export default getInvoiceByName;
