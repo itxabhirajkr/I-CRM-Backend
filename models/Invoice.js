@@ -132,7 +132,7 @@ const invoiceSchema = new mongoose.Schema({
   serviceDays: {
     type: Number,
     required: false,
-    default: function () {
+    default: function() {
       if (this.serviceFromDate && this.serviceToDate) {
         const diffTime = Math.abs(this.serviceToDate - this.serviceFromDate);
         return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
