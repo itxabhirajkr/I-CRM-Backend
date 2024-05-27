@@ -3,6 +3,7 @@ import Client from "../models/Client.js";
 import People from "../models/People.js";
 import Project from "../models/Project.js";
 import QRCode from "qrcode";
+import numberToWords from 'number-to-words';
 
 import APIFeatures from "../utils/apiFeatures.js";
 
@@ -194,7 +195,7 @@ export const generateInvoiceData = async (req, res, next) => {
     const { id } = req.params;
 
     // Find the invoice by name
-    const invoice = await Invoice.findOne({ id })
+    const invoice = await Invoice.findById( id )
       .populate("clientId")
       .populate("projectId")
       .populate("preparedBy")

@@ -12,6 +12,6 @@ const router = express.Router();
 
 router.route("/").get(getAllInvoices).post(createInvoice);
 router.route("/:id").get(getInvoice).put(updateInvoice).delete(deleteInvoice);
-router.get("/:id", generateInvoiceData);
+router.get("/pdf/:id", generateInvoiceData);
 
 export default router;
