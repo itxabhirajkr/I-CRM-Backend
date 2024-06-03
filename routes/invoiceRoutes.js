@@ -5,13 +5,13 @@ import {
   createInvoice,
   updateInvoice,
   deleteInvoice,
-  getInvoiceById
+  generateInvoiceData,
 } from "../controllers/invoiceController.js";
 
 const router = express.Router();
 
 router.route("/").get(getAllInvoices).post(createInvoice);
 router.route("/:id").get(getInvoice).put(updateInvoice).delete(deleteInvoice);
-router.get('/invoice/:id', getInvoiceById);
+router.get("/pdf/:id", generateInvoiceData);
 
 export default router;
