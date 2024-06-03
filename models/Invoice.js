@@ -96,7 +96,7 @@ const invoiceSchema = new mongoose.Schema({
   clientId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Client",
-    required: true,
+    // required: true,
   },
   projectId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -110,7 +110,7 @@ const invoiceSchema = new mongoose.Schema({
   },
   number: {
     type: String,
-    required: true,
+    // required: true,
   },
   poNumber: String,
   date: {
@@ -148,7 +148,7 @@ const invoiceSchema = new mongoose.Schema({
   preparedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "People",
-    required: true,
+    // required: true,
   },
   reviewedBy: [
     {
