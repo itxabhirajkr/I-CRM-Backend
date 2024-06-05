@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
- 
+
 const { Schema, model } = mongoose;
- 
+
 // Schema for Services
 const serviceSchema = new Schema({
   name: {
@@ -78,7 +78,7 @@ const serviceSchema = new Schema({
     required: true,
   },
 });
- 
+
 // Schema for Adjustments
 const adjustmentSchema = new mongoose.Schema({
   name: {
@@ -90,7 +90,7 @@ const adjustmentSchema = new mongoose.Schema({
     required: true,
   },
 });
- 
+
 // Main Schema
 const invoiceSchema = new mongoose.Schema({
   clientId: {
@@ -132,7 +132,7 @@ const invoiceSchema = new mongoose.Schema({
   serviceDays: {
     type: Number,
     required: false,
-    default: function() {
+    default: function () {
       if (this.serviceFromDate && this.serviceToDate) {
         const diffTime = Math.abs(this.serviceToDate - this.serviceFromDate);
         return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -211,7 +211,7 @@ const invoiceSchema = new mongoose.Schema({
   },
   lostAmountINR: Number,
 });
- 
+
 // Pre-save middleware to set the serial number
 invoiceSchema.pre("save", async function (next) {
   if (this.isNew) {
@@ -219,10 +219,18 @@ invoiceSchema.pre("save", async function (next) {
       .findOne()
       .sort({ serialNumber: -1 });
     this.serialNumber = lastInvoice ? lastInvoice.serialNumber + 1 : 1;
+    if (this.projectId) {
+      const project = await Project.findById(this.projectId).select("clientId");
+      if (project) {
+        this.clientId = project.clientId;
+      } else {
+        return next(new Error("Invalid projectId"));
+      }
+    }
   }
   next();
 });
- 
+
 const Invoice = model("Invoice", invoiceSchema);
- 
+
 export default Invoice;
