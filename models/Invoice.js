@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import Project from "./Project.js";
+
 
 const { Schema, model } = mongoose;
 
@@ -77,6 +79,10 @@ const serviceSchema = new Schema({
     type: Number,
     required: true,
   },
+  state: {
+    type: String,
+    enum: ["Uttar Pradesh", "Others"],
+  }
 });
 
 // Schema for Adjustments
@@ -228,6 +234,26 @@ invoiceSchema.pre("save", async function (next) {
       }
     }
   }
+  
+  this.services.forEach(service => {
+    const taxableAmount = service.taxableAmount;
+    if (this.state === 'uttarpradesh') {
+      service.sgstRate = '9';
+      service.cgstRate = '9';
+      service.igstRate = 'Nil';
+      service.sgstAmount = taxableAmount * 0.09;
+      service.cgstAmount = taxableAmount * 0.09;
+      service.igstAmount = 0;
+    } else {
+      service.sgstRate = 'Nil';
+      service.cgstRate = 'Nil';
+      service.igstRate = '18';
+      service.sgstAmount = 0;
+      service.cgstAmount = 0;
+      service.igstAmount = taxableAmount * 0.18;
+    }
+  });
+
   next();
 });
 
