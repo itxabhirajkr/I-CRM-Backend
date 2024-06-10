@@ -8,7 +8,7 @@ import numberToWords from "number-to-words";
 import puppeteer from "puppeteer";
 import path from "path";
 import nodemailer from "nodemailer";
-import handlebars from 'handlebars';
+import handlebars from "handlebars";
 
 import APIFeatures from "../utils/apiFeatures.js";
 
@@ -120,15 +120,32 @@ export const generateInvoiceData = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const userEmail = req.headers["user-email"];
+    const authHeader = req.headers["authorization"];
+
+    if (!authHeader) {
+      return res.status(401).send({ error: "Authorization header missing" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    if (!token) {
+      return res
+        .status(401)
+        .send({ error: "Token missing from authorization header" });
+    }
+
+    const userInfo = verifyToken(token);
+
+    if (!userInfo) {
+      return res.status(401).send({ error: "Invalid or expired token" });
+    }
+    const userEmail = userInfo.email;
 
     if (!userEmail) {
-      return res
-        .status(400)
-        .json({
-          status: "fail",
-          message: "User email not provided in headers",
-        });
+      return res.status(400).json({
+        status: "fail",
+        message: "User email not provided in headers",
+      });
     }
 
     // Find the invoice by name
@@ -285,8 +302,8 @@ export const generateInvoiceData = async (req, res, next) => {
     };
 
     //mail logic
-    const templatePath = path.resolve('utils', 'mailTemplate.html');
-    const templateSource = fs.readFileSync(templatePath, 'utf-8');
+    const templatePath = path.resolve("utils", "mailTemplate.html");
+    const templateSource = fs.readFileSync(templatePath, "utf-8");
     const template = handlebars.compile(templateSource);
     const filledTemplate = template(invoiceData);
 
