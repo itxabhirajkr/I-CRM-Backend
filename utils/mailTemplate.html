@@ -1,238 +1,255 @@
 <!-- const invoiceTemplate = (invoiceData) => {
     return ` -->
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Invoice</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          }
-          h1 {
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-          }
-          th,
-          td {
-            padding: 5px 20px;
-            border: 1px solid #e0e0e0;
-            text-align: left;
-          }
-          th {
-            background-color: #f0f0f0;
-          }
-          .text-right {
-            text-align: right;
-          }
-          .font-bold {
-            font-weight: bold;
-          }
-          .text-gray {
-            color: #666;
-          }
-          .text-small {
-            font-size: 12px;
-          }
-          .mt-8 {
-            margin-top: 20px;
-          }
-          .ml-60 {
-            margin-left: 60px;
-          }
-          .border-none {
-            border: none;
-          }
-          .inzint {
-            margin-left: -330px;
-          }
-          .inzit-body {
-            font-size: 14px;
-            width: 98%;
-          }
-          .services > th {
-            padding-top: 5px;
-            padding-bottom: 5px;
-          }
-          .table-list > td {
-            padding-top: 5px;
-            padding-bottom: 5px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container" id="invoice">
-          <h1>Tax Invoice</h1>
-          <!-- Client info -->
-          <div class="">
-            <table class="inzit-body">
-              <tbody class="inzit-body">
-                <!-- First Row -->
-                <tr>
-                  <td class="border-none" style="border-bottom: 1px solid #e0e0e0">
-                    <h1
-                      class="font-bold inzint"
-                      style="border-left: 1px solid #e0e0e0"
-                    >
-                      ${invoiceData.companyName}
-                    </h1>
-                    <p class="text-gray">
-                      ${invoiceData.companyAddress}
-                    </p>
-                    <p class="text-gray">GSTIN: ${invoiceData.companyGSTIN}</p>
-                  </td>
-                  <td
-                    class="text-right border-none"
-                    style="
-                      border-left: 1px solid #e0e0e0;
-                      border-bottom: 1px solid #e0e0e0;
-                    "
-                  >
-                    <p>
-                      Invoice number:<span class="text-gray"> ${invoiceData.invoiceNumber}</span>
-                    </p>
-                    <p>
-                      Invoice date:<span class="text-gray"> ${invoiceData.invoiceDate}</span><br />
-                      Due date:<span class="text-gray"> ${invoiceData.dueDate}</span>
-                    </p>
-                  </td>
-                </tr>
-                <!-- Second Row -->
-                <tr>
-                  <td
-                    class="border-none"
-                    style="
-                      border-right: 1px solid #e0e0e0;
-                      border-bottom: 1px solid #e0e0e0;
-                    "
-                  >
-                    <p class="text-gray">
-                      ${invoiceData.billedTo.businessName}.<br />
-                      ${invoiceData.billedTo.address}
-                    </p>
-                    <p class="text-gray">${invoiceData.billedTo.email}</p>
-                  </td>
-                  <td
-                    class="text-right border-none"
-                    style="
-                      border-left: 1px solid #e0e0e0;
-                      border-bottom: 1px solid #e0e0e0;
-                    "
-                  >
-                    <img
-                      class="ml-60"
-                      width="60"
-                      height="60"
-                      src="${invoiceData.qrCode}"
-                      alt="QR Code"
-                    />
-                  </td>
-                </tr>
-                <!-- Third Row -->
-                <tr>
-                  <td class="border-none" style="border-right: 1px solid #e0e0e0">
-                    <p class="text-gray">
-                      ${invoiceData.billedTo.businessName}.<br />
-                      ${invoiceData.billedTo.address}
-                    </p>
-                    <p class="text-gray">${invoiceData.billedTo.email}</p>
-                  </td>
-                  <td
-                    class="text-right border-none"
-                    style="border-left: 1px solid #e0e0e0"
-                  >
-                    <p class="text-gray">
-                      Doc #: ${invoiceData.docNumber}<br />
-                      PO# : ${invoiceData.poNumber}
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- Invoice Items -->
-          <div class="flow-root">
-            <div class="flex flex-col mt-2">
-              <table
-                class="min-w-full divide-y divide-slate-200 border border-gray-200"
+'<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        padding: 5px 20px;
+        border: 1px solid #e0e0e0;
+        text-align: left;
+      }
+      th {
+        background-color: #f0f0f0;
+      }
+      .text-right {
+        text-align: right;
+      }
+      .font-bold {
+        font-weight: bold;
+      }
+      .text-gray {
+        color: #666;
+      }
+      .text-small {
+        font-size: 12px;
+      }
+      .mt-8 {
+        margin-top: 20px;
+      }
+      .ml-60 {
+        margin-left: 60px;
+      }
+      .border-none {
+        border: none;
+      }
+      .inzint {
+        margin-left: -330px;
+      }
+      .inzit-body {
+        font-size: 14px;
+        width: 98%;
+      }
+      .services > th {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+      .table-list > td {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="invoice">
+      <h1>Tax Invoice</h1>
+      <!-- Client info -->
+      <div class="">
+        <table class="inzit-body">
+          <tbody class="inzit-body">
+            <!-- First Row -->
+            <tr>
+              <td class="border-none" style="border-bottom: 1px solid #e0e0e0">
+                <h1
+                  class="font-bold inzint"
+                  style="border-left: 1px solid #e0e0e0"
+                >
+                  ${invoiceData.companyName}
+                </h1>
+                <p class="text-gray">${invoiceData.companyAddress}</p>
+                <p class="text-gray">GSTIN: ${invoiceData.companyGSTIN}</p>
+              </td>
+              <td
+                class="text-right border-none"
+                style="
+                  border-left: 1px solid #e0e0e0;
+                  border-bottom: 1px solid #e0e0e0;
+                "
               >
-                <thead>
-                  <tr class="services">
-                    <th scope="col">Services</th>
-                    <th scope="col" class="text-right">SAC</th>
-                    <th scope="col" class="text-right">Hrs</th>
-                    <th scope="col" class="text-right">Rate</th>
-                    <th scope="col" class="text-right">Dis.</th>
-                    <th scope="col" class="text-center">Taxable Value</th>
-                    <th scope="col" class="text-right">SGST</th>
-                    <th scope="col" class="text-right">CGST</th>
-                    <th scope="col" class="text-right">IGST</th>
-                    <th scope="col" class="text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${invoiceData.services.map(service => `
-                    <tr class="table-list">
-                      <td>${service.name}</td>
-                      <td class="text-right">${service.SAC}</td>
-                      <td class="text-right">${service.hours}</td>
-                      <td class="text-right">${service.rate}</td>
-                      <td class="text-right">${service.discount}</td>
-                      <td class="text-right">${service.taxableValue}</td>
-                      <td class="text-right">${service.sgst}</td>
-                      <td class="text-right">${service.cgst}</td>
-                      <td class="text-right">${service.igst}</td>
-                      <td class="text-right">${service.amount}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-                <!-- Invoice Total -->
-                <tfoot>
-                  <tr class="table-list">
-                    <td colspan="7" class="text-right font-bold">Subtotal:</td>
-                    <td colspan="3" class="text-right">${invoiceData.currentCharges.subtotal}</td>
-                  </tr>
-                  <tr class="table-list">
-                    <td colspan="1" class="text-center">Prepared By</td>
-                    <td colspan="4" class="text-center">${invoiceData.preparedBy} on ${invoiceData.preparedByDate}</td>
-                    <td colspan="2" class="text-right font-bold">Tax:</td>
-                    <td colspan="4" class="text-right">${invoiceData.currentCharges.tax}</td>
-                  </tr>
-                  <tr class="table-list">
-                    <td colspan="1" class="text-center">Reviewed By</td>
-                    <td colspan="4" class="text-center">${invoiceData.reviewedBy}</td>
-                    <td colspan="2" class="text-right font-bold">Total:</td>
-                    <td colspan="4" class="text-right">${invoiceData.totalAmountDueINR}</td>
-                  </tr>
-                  <tr class="table-list">
-                    <td colspan="7" class="text-right font-bold">Due balance:</td>
-                    <td colspan="3" class="text-right">${invoiceData.currentDue}</td>
-                  </tr>
-                </tfoot>
-              </table>
-              <h1 class="my-2 mx-6">Signature</h1>
-            </div>
-          </div>
+                <p>
+                  Invoice number:<span class="text-gray">
+                    ${invoiceData.invoiceNumber}</span
+                  >
+                </p>
+                <p>
+                  Invoice date:<span class="text-gray">
+                    ${invoiceData.invoiceDate}</span
+                  ><br />
+                  Due date:<span class="text-gray">
+                    ${invoiceData.dueDate}</span
+                  >
+                </p>
+              </td>
+            </tr>
+            <!-- Second Row -->
+            <tr>
+              <td
+                class="border-none"
+                style="
+                  border-right: 1px solid #e0e0e0;
+                  border-bottom: 1px solid #e0e0e0;
+                "
+              >
+                <p class="text-gray">
+                  ${invoiceData.billedTo.businessName}.<br />
+                  ${invoiceData.billedTo.address}
+                </p>
+                <p class="text-gray">${invoiceData.billedTo.email}</p>
+              </td>
+              <td
+                class="text-right border-none"
+                style="
+                  border-left: 1px solid #e0e0e0;
+                  border-bottom: 1px solid #e0e0e0;
+                "
+              >
+                <img
+                  class="ml-60"
+                  width="60"
+                  height="60"
+                  src="${invoiceData.qrCode}"
+                  alt="QR Code"
+                />
+              </td>
+            </tr>
+            <!-- Third Row -->
+            <tr>
+              <td class="border-none" style="border-right: 1px solid #e0e0e0">
+                <p class="text-gray">
+                  ${invoiceData.billedTo.businessName}.<br />
+                  ${invoiceData.billedTo.address}
+                </p>
+                <p class="text-gray">${invoiceData.billedTo.email}</p>
+              </td>
+              <td
+                class="text-right border-none"
+                style="border-left: 1px solid #e0e0e0"
+              >
+                <p class="text-gray">
+                  Doc #: ${invoiceData.docNumber}<br />
+                  PO# : ${invoiceData.poNumber}
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Invoice Items -->
+      <div class="flow-root">
+        <div class="flex flex-col mt-2">
+          <table
+            class="min-w-full divide-y divide-slate-200 border border-gray-200"
+          >
+            <thead>
+              <tr class="services">
+                <th scope="col">Services</th>
+                <th scope="col" class="text-right">SAC</th>
+                <th scope="col" class="text-right">Hrs</th>
+                <th scope="col" class="text-right">Rate</th>
+                <th scope="col" class="text-right">Dis.</th>
+                <th scope="col" class="text-center">Taxable Value</th>
+                <th scope="col" class="text-right">SGST</th>
+                <th scope="col" class="text-right">CGST</th>
+                <th scope="col" class="text-right">IGST</th>
+                <th scope="col" class="text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${invoiceData.services.map(service => `
+              <tr class="table-list">
+                <td>${service.name}</td>
+                <td class="text-right">${service.SAC}</td>
+                <td class="text-right">${service.hours}</td>
+                <td class="text-right">${service.rate}</td>
+                <td class="text-right">${service.discount}</td>
+                <td class="text-right">${service.taxableValue}</td>
+                <td class="text-right">${service.sgst}</td>
+                <td class="text-right">${service.cgst}</td>
+                <td class="text-right">${service.igst}</td>
+                <td class="text-right">${service.amount}</td>
+              </tr>
+              `).join('')}
+            </tbody>
+            <!-- Invoice Total -->
+            <tfoot>
+              <tr class="table-list">
+                <td colspan="7" class="text-right font-bold">Subtotal:</td>
+                <td colspan="3" class="text-right">
+                  ${invoiceData.currentCharges.subtotal}
+                </td>
+              </tr>
+              <tr class="table-list">
+                <td colspan="1" class="text-center">Prepared By</td>
+                <td colspan="4" class="text-center">
+                  ${invoiceData.preparedBy} on ${invoiceData.preparedByDate}
+                </td>
+                <td colspan="2" class="text-right font-bold">Tax:</td>
+                <td colspan="4" class="text-right">
+                  ${invoiceData.currentCharges.tax}
+                </td>
+              </tr>
+              <tr class="table-list">
+                <td colspan="1" class="text-center">Reviewed By</td>
+                <td colspan="4" class="text-center">
+                  ${invoiceData.reviewedBy}
+                </td>
+                <td colspan="2" class="text-right font-bold">Total:</td>
+                <td colspan="4" class="text-right">
+                  ${invoiceData.totalAmountDueINR}
+                </td>
+              </tr>
+              <tr class="table-list">
+                <td colspan="7" class="text-right font-bold">Due balance:</td>
+                <td colspan="3" class="text-right">
+                  ${invoiceData.currentDue}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+          <h1 class="my-2 mx-6">Signature</h1>
         </div>
-      </body>
-    </html>`;
-  };
-  <!-- export default invoiceTemplate; -->
+      </div>
+    </div>
+  </body>
+</html>
+`
+
+<!-- export default invoiceTemplate; -->

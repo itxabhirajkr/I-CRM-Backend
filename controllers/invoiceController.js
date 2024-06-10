@@ -11,6 +11,7 @@ import nodemailer from "nodemailer";
 import handlebars from "handlebars";
 
 import APIFeatures from "../utils/apiFeatures.js";
+import { auth } from "../middleware/Auth.js";
 
 export const getAllInvoices = async (req, res, next) => {
   try {
@@ -134,8 +135,8 @@ export const generateInvoiceData = async (req, res, next) => {
         .send({ error: "Token missing from authorization header" });
     }
 
-    const userInfo = verifyToken(token);
-
+    // const userInfo = auth(token);
+    const userInfo= token;
     if (!userInfo) {
       return res.status(401).send({ error: "Invalid or expired token" });
     }
