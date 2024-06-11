@@ -6,6 +6,7 @@ import Project from "../models/Project.js";
 import QRCode from "qrcode";
 import numberToWords from "number-to-words";
 import puppeteer from "puppeteer";
+import fs from 'fs';
 import path from "path";
 import nodemailer from "nodemailer";
 import handlebars from "handlebars";
@@ -121,26 +122,8 @@ export const generateInvoiceData = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const authHeader = req.headers["authorization"];
+    const userEmail = req.headers["email"];
 
-    if (!authHeader) {
-      return res.status(401).send({ error: "Authorization header missing" });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    if (!token) {
-      return res
-        .status(401)
-        .send({ error: "Token missing from authorization header" });
-    }
-
-    // const userInfo = auth(token);
-    const userInfo= token;
-    if (!userInfo) {
-      return res.status(401).send({ error: "Invalid or expired token" });
-    }
-    const userEmail = userInfo.email;
 
     if (!userEmail) {
       return res.status(400).json({
@@ -148,6 +131,8 @@ export const generateInvoiceData = async (req, res, next) => {
         message: "User email not provided in headers",
       });
     }
+
+    console.log(userEmail);
 
     // Find the invoice by name
     const invoice = await Invoice.findById(id)
