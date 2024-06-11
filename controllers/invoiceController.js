@@ -134,7 +134,7 @@ export const generateInvoiceData = async (req, res, next) => {
         .send({ error: "Token missing from authorization header" });
     }
 
-    const userInfo = verifyToken(token);
+    console.log(token);
 
     if (!userInfo) {
       return res.status(401).send({ error: "Invalid or expired token" });
