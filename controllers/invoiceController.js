@@ -12,6 +12,7 @@ import nodemailer from "nodemailer";
 import handlebars from "handlebars";
 
 import APIFeatures from "../utils/apiFeatures.js";
+import { auth } from "../middleware/Auth.js";
 
 export const getAllInvoices = async (req, res, next) => {
   try {
@@ -122,6 +123,7 @@ export const generateInvoiceData = async (req, res, next) => {
     const { id } = req.params;
 
     const userEmail = req.headers["email"];
+
 
     if (!userEmail) {
       return res.status(400).json({
