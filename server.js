@@ -10,6 +10,7 @@ import clientRoutes from "./routes/clientRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
+import purchaseItemRoutes from "./routes/purchaseItemRoutes.js";
 const app = express();
 
 // Load environment variables from .env file
@@ -37,6 +38,7 @@ app.use("/people", peopleRoutes);
 app.use("/client", clientRoutes);
 app.use("/project", projectRoutes);
 app.use('/invoices', invoiceRoutes);
+app.use('/purchaseItems', purchaseItemRoutes);
 const PORT = process.env.PORT || 3300;
 
 const server = app.listen(PORT, () => {
