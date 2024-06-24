@@ -303,13 +303,13 @@ export const generateInvoiceData = async (req, res, next) => {
     const transporter = nodemailer.createTransport({
       service: "Outlook",
       auth: {
-        user: "jai@inzint.com",
-        pass: "password",
+        user: "priyanshu@inzint.com",
+        pass: "Sav44246",
       },
     });
 
     const mailOptions = {
-      from: "jai@inzint.com",
+      from: "priyanshu@inzint.com",
       to: userEmail,
       subject: `Invoice ${invoice.serialNumber}`,
       text: `Please find attached the invoice ${invoice.serialNumber}.`,
