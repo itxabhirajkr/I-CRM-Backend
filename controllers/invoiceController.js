@@ -122,8 +122,26 @@ export const generateInvoiceData = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const userEmail = req.headers["email"];
+    const authHeader = req.headers["authorization"];
 
+    if (!authHeader) {
+      return res.status(401).send({ error: "Authorization header missing" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    if (!token) {
+      return res
+        .status(401)
+        .send({ error: "Token missing from authorization header" });
+    }
+
+    // const userInfo = auth(token);
+    const userInfo= token;
+    if (!userInfo) {
+      return res.status(401).send({ error: "Invalid or expired token" });
+    }
+    const userEmail = userInfo.email;
 
     if (!userEmail) {
       return res.status(400).json({
@@ -292,7 +310,8 @@ export const generateInvoiceData = async (req, res, next) => {
     const templateSource = fs.readFileSync(templatePath, "utf-8");
     const template = handlebars.compile(templateSource);
     const filledTemplate = template(invoiceData);
-
+    
+    
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(filledTemplate);

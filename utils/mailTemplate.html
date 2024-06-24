@@ -1,6 +1,4 @@
-<!-- const invoiceTemplate = (invoiceData) => {
-    return ` -->
-'<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -92,10 +90,10 @@
                   class="font-bold inzint"
                   style="border-left: 1px solid #e0e0e0"
                 >
-                  ${invoiceData.companyName}
+                  {{companyName}}
                 </h1>
-                <p class="text-gray">${invoiceData.companyAddress}</p>
-                <p class="text-gray">GSTIN: ${invoiceData.companyGSTIN}</p>
+                <p class="text-gray">{{companyAddress}}</p>
+                <p class="text-gray">GSTIN: {{companyGSTIN}}</p>
               </td>
               <td
                 class="text-right border-none"
@@ -106,16 +104,13 @@
               >
                 <p>
                   Invoice number:<span class="text-gray">
-                    ${invoiceData.invoiceNumber}</span
+                    {{invoiceNumber}}</span
                   >
                 </p>
                 <p>
-                  Invoice date:<span class="text-gray">
-                    ${invoiceData.invoiceDate}</span
+                  Invoice date:<span class="text-gray"> {{invoiceDate}}</span
                   ><br />
-                  Due date:<span class="text-gray">
-                    ${invoiceData.dueDate}</span
-                  >
+                  Due date:<span class="text-gray"> {{dueDate}}</span>
                 </p>
               </td>
             </tr>
@@ -129,10 +124,10 @@
                 "
               >
                 <p class="text-gray">
-                  ${invoiceData.billedTo.businessName}.<br />
-                  ${invoiceData.billedTo.address}
+                  {{billedTo.businessName}}.<br />
+                  {{billedTo.address}}
                 </p>
-                <p class="text-gray">${invoiceData.billedTo.email}</p>
+                <p class="text-gray">{{billedTo.email}}</p>
               </td>
               <td
                 class="text-right border-none"
@@ -145,7 +140,7 @@
                   class="ml-60"
                   width="60"
                   height="60"
-                  src="${invoiceData.qrCode}"
+                  src="{{qrCode}}"
                   alt="QR Code"
                 />
               </td>
@@ -154,18 +149,18 @@
             <tr>
               <td class="border-none" style="border-right: 1px solid #e0e0e0">
                 <p class="text-gray">
-                  ${invoiceData.billedTo.businessName}.<br />
-                  ${invoiceData.billedTo.address}
+                  {{billedTo.businessName}}.<br />
+                  {{billedTo.address}}
                 </p>
-                <p class="text-gray">${invoiceData.billedTo.email}</p>
+                <p class="text-gray">{{billedTo.email}}</p>
               </td>
               <td
                 class="text-right border-none"
                 style="border-left: 1px solid #e0e0e0"
               >
                 <p class="text-gray">
-                  Doc #: ${invoiceData.docNumber}<br />
-                  PO# : ${invoiceData.poNumber}
+                  Doc #: {{docNumber}}<br />
+                  PO# : {{poNumber}}
                 </p>
               </td>
             </tr>
@@ -193,54 +188,46 @@
               </tr>
             </thead>
             <tbody>
-              ${invoiceData.services.map(service => `
+              {{#each services}}
               <tr class="table-list">
-                <td>${service.name}</td>
-                <td class="text-right">${service.SAC}</td>
-                <td class="text-right">${service.hours}</td>
-                <td class="text-right">${service.rate}</td>
-                <td class="text-right">${service.discount}</td>
-                <td class="text-right">${service.taxableValue}</td>
-                <td class="text-right">${service.sgst}</td>
-                <td class="text-right">${service.cgst}</td>
-                <td class="text-right">${service.igst}</td>
-                <td class="text-right">${service.amount}</td>
+                <td>{{name}}</td>
+                <td class="text-right">{{SAC}}</td>
+                <td class="text-right">{{hours}}</td>
+                <td class="text-right">{{rate}}</td>
+                <td class="text-right">{{discount}}</td>
+                <td class="text-right">{{taxableValue}}</td>
+                <td class="text-right">{{sgst}}</td>
+                <td class="text-right">{{cgst}}</td>
+                <td class="text-right">{{igst}}</td>
+                <td class="text-right">{{amount}}</td>
               </tr>
-              `).join('')}
+              {{/each}}
             </tbody>
             <!-- Invoice Total -->
             <tfoot>
               <tr class="table-list">
                 <td colspan="7" class="text-right font-bold">Subtotal:</td>
                 <td colspan="3" class="text-right">
-                  ${invoiceData.currentCharges.subtotal}
+                  {{currentCharges.subtotal}}
                 </td>
               </tr>
               <tr class="table-list">
                 <td colspan="1" class="text-center">Prepared By</td>
                 <td colspan="4" class="text-center">
-                  ${invoiceData.preparedBy} on ${invoiceData.preparedByDate}
+                  {{preparedBy}} on {{preparedByDate}}
                 </td>
                 <td colspan="2" class="text-right font-bold">Tax:</td>
-                <td colspan="4" class="text-right">
-                  ${invoiceData.currentCharges.tax}
-                </td>
+                <td colspan="4" class="text-right">{{currentCharges.tax}}</td>
               </tr>
               <tr class="table-list">
                 <td colspan="1" class="text-center">Reviewed By</td>
-                <td colspan="4" class="text-center">
-                  ${invoiceData.reviewedBy}
-                </td>
+                <td colspan="4" class="text-center">{{reviewedBy}}</td>
                 <td colspan="2" class="text-right font-bold">Total:</td>
-                <td colspan="4" class="text-right">
-                  ${invoiceData.totalAmountDueINR}
-                </td>
+                <td colspan="4" class="text-right">{{totalAmountDueINR}}</td>
               </tr>
               <tr class="table-list">
                 <td colspan="7" class="text-right font-bold">Due balance:</td>
-                <td colspan="3" class="text-right">
-                  ${invoiceData.currentDue}
-                </td>
+                <td colspan="3" class="text-right">{{currentDue}}</td>
               </tr>
             </tfoot>
           </table>
@@ -250,6 +237,3 @@
     </div>
   </body>
 </html>
-`
-
-<!-- export default invoiceTemplate; -->
