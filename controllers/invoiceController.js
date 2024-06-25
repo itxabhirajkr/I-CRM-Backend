@@ -121,36 +121,13 @@ export const deleteInvoice = async (req, res, next) => {
 export const generateInvoiceData = async (req, res, next) => {
   try {
     const { id } = req.params;
+        const userEmail = req.headers["email"];
 
-    const authHeader = req.headers["authorization"];
+        if (!userEmail) {
+            return res.status(401).send({ error: "Email header missing" });
+        }
 
-    if (!authHeader) {
-      return res.status(401).send({ error: "Authorization header missing" });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    if (!token) {
-      return res
-        .status(401)
-        .send({ error: "Token missing from authorization header" });
-    }
-
-    // const userInfo = auth(token);
-    const userInfo= token;
-    if (!userInfo) {
-      return res.status(401).send({ error: "Invalid or expired token" });
-    }
-    const userEmail = userInfo.email;
-
-    if (!userEmail) {
-      return res.status(400).json({
-        status: "fail",
-        message: "User email not provided in headers",
-      });
-    }
-
-    console.log(userEmail);
+        console.log(userEmail);
 
     // Find the invoice by name
     const invoice = await Invoice.findById(id)
@@ -322,13 +299,13 @@ export const generateInvoiceData = async (req, res, next) => {
     const transporter = nodemailer.createTransport({
       service: "Outlook",
       auth: {
-        user: "jai@inzint.com",
-        pass: "password",
+        user: "priyanshu@inzint.com",
+        pass: "Sav44246",
       },
     });
 
     const mailOptions = {
-      from: "jai@inzint.com",
+      from: "priyanshu@inzint.com",
       to: userEmail,
       subject: `Invoice ${invoice.serialNumber}`,
       text: `Please find attached the invoice ${invoice.serialNumber}.`,
