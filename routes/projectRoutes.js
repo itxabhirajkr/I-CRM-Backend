@@ -5,6 +5,7 @@ import {
   getProject,
   updateProject,
   deleteProject,
+  getClientFromProject,
 } from "../controllers/projectController.js";
 
 const router = express.Router();
@@ -17,6 +18,8 @@ router.get("/", getAllProjects);
 
 // Get a specific project by ID
 router.get("/:id", getProject);
+
+router.get("/projID/:id", getClientFromProject);
 
 // Update a project by ID
 router.put("/:id", updateProject);
