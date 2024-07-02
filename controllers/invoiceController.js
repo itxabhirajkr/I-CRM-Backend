@@ -141,17 +141,22 @@ export const generateInvoiceData = async (req, res, next) => {
         .status(404)
         .json({ status: "fail", message: "Invoice not found" });
     }
+    console.log("This is invoice", invoice);
+    
 
     // Extract client details
     const client = await Client.findById(invoice.clientId);
 
+    console.log("This is client", client);
+
     // Extract project details
     const project = await Project.findById(invoice.projectId);
-
+    console.log("This is project", project);
     // Extract people details
     const preparedBy = await People.findById(invoice.preparedBy);
     const reviewedBy = await People.find({ _id: { $in: invoice.reviewedBy } });
-
+    console.log("This is preparedBy", preparedBy);
+    console.log("This is reviewedBy", reviewedBy);
     // Calculate previous dues
     const previousInvoices = await Invoice.find({
       clientId: client._id,
@@ -281,6 +286,7 @@ export const generateInvoiceData = async (req, res, next) => {
       )} INR Only`,
       signatureAndSeal: "<signature & seal here>",
     };
+    console.log("This is invoiceFilledData", invoiceData)
 
     //mail logic
     const templatePath = path.resolve("utils", "mailTemplate.html");
