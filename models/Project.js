@@ -70,7 +70,7 @@ const projectSchema = new Schema({
     required: true,
   },
   clientId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: "Client",
     required: true,
   },

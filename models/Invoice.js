@@ -229,6 +229,7 @@ invoiceSchema.pre("save", async function (next) {
       const project = await Project.findById(this.projectId).select("clientId");
       if (project) {
         this.clientId = project.clientId;
+        console.log(this.clientId, "is client id");
       } else {
         return next(new Error("Invalid projectId"));
       }

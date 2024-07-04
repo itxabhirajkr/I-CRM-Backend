@@ -49,22 +49,22 @@ async function getProject(req, res) {
 }
 
 // Get a specific project by ID
-async function getClientFromProject(req, res) {
-  try {
-    const project = await Project.findById(req.params.id) // Populate the clientId field with customerDisplayName
-    if (!project) {
-      return res.status(404).json({ message: "Project not found" });
-    }
-      // Debugging: Log the populated project object to verify structure
-      console.log(project.clientId);
+// async function getClientFromProject(req, res) {
+//   try {
+//     const project = await Project.findById(req.body) // Populate the clientId field with customerDisplayName
+//     if (!project) {
+//       return res.status(404).json({ message: "Project not found" });
+//     }
+//       // Debugging: Log the populated project object to verify structure
+//       console.log(project.clientId);
  
-    // Extract the customerDisplayName from the populated client document
-    const customerDisplayName = project.clientId;
-    res.json({ customerDisplayName });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-}
+//     // Extract the customerDisplayName from the populated client document
+//     const customerDisplayName = project.clientId;
+//     res.json({ customerDisplayName });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// }
 // Update a project by ID
 async function updateProject(req, res) {
   try {
@@ -99,5 +99,5 @@ export {
   getProject,
   updateProject,
   deleteProject,
-  getClientFromProject,
+  // getClientFromProject,
 };
