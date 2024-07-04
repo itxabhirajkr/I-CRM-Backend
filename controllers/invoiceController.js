@@ -270,10 +270,10 @@ export const generateInvoiceData = async (req, res, next) => {
           service.igstAmount,
       })),
       currentCharges: currentCharges,
-      preparedBy: preparedBy.displayName,
+      preparedBy: "Imtiyaz",
       preparedByDate: new Date().toISOString(),
       amountReceived: invoice.paidAmount || 0,
-      reviewedBy: reviewedBy.map((person) => person.displayName).join(", "),
+      reviewedBy: "Imtiyaz",
       currentDue: currentCharges,
       previousDues: previousDues, // This should be fetched or calculated from historical data
       totalAmountDueUSD: totalAmountDueUSD, // This should be calculated
@@ -305,13 +305,13 @@ export const generateInvoiceData = async (req, res, next) => {
     const transporter = nodemailer.createTransport({
       service: "Outlook",
       auth: {
-        user: "priyanshu@inzint.com",
-        pass: "Sav44246",
+        user: "",
+        pass: "",
       },
     });
 
     const mailOptions = {
-      from: "priyanshu@inzint.com",
+      from: "faizan@inzint.com",
       to: userEmail,
       subject: `Invoice ${invoice.serialNumber}`,
       text: `Please find attached the invoice ${invoice.serialNumber}.`,
