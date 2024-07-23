@@ -10,9 +10,7 @@ import fs from 'fs';
 import path from "path";
 import nodemailer from "nodemailer";
 import handlebars from "handlebars";
-import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables from .env file
 import APIFeatures from "../utils/apiFeatures.js";
 import { auth } from "../middleware/Auth.js";
 
@@ -133,11 +131,11 @@ export const generateInvoiceData = async (req, res, next) => {
 
     // Find the invoice by name
     const invoice = await Invoice.findById(id)
-      // .populate("clientId")
-      // .populate("projectId")
+      .populate("clientId")
+      .populate("projectId")
       .populate("preparedBy")
       .populate("reviewedBy");
-    console.log("this is invoice", invoice);
+
     if (!invoice) {
       return res
         .status(404)
@@ -272,10 +270,10 @@ export const generateInvoiceData = async (req, res, next) => {
           service.igstAmount,
       })),
       currentCharges: currentCharges,
-      preparedBy:  invoice.preparedBy || "Imtiyaz",
+      preparedBy: "Imtiyaz",
       preparedByDate: new Date().toISOString(),
       amountReceived: invoice.paidAmount || 0,
-      reviewedBy: invoice.reviewedBy || "Imtiyaz",
+      reviewedBy: "Imtiyaz",
       currentDue: currentCharges,
       previousDues: previousDues, // This should be fetched or calculated from historical data
       totalAmountDueUSD: totalAmountDueUSD, // This should be calculated
@@ -289,66 +287,50 @@ export const generateInvoiceData = async (req, res, next) => {
       signatureAndSeal: "<signature & seal here>",
     };
     console.log("This is invoiceFilledData", invoiceData)
+
+    //mail logic
+    const templatePath = path.resolve("utils", "mailTemplate.html");
+    const templateSource = fs.readFileSync(templatePath, "utf-8");
+    const template = handlebars.compile(templateSource);
+    const filledTemplate = template(invoiceData);
+    
+    
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(filledTemplate);
+    const pdfBuffer = await page.pdf({ format: "A4" });
+
+    await browser.close();
+
+    const transporter = nodemailer.createTransport({
+      service: "Outlook",
+      auth: {
+        user: "parakh@inzint.com",
+        pass: "K@nu@9358",
+      },
+    });
+
+    const mailOptions = {
+      from: "parakh@inzint.com",
+      to: userEmail,
+      subject: `Invoice ${invoice.serialNumber}`,
+      text: `Please find attached the invoice ${invoice.serialNumber}.`,
+      attachments: [
+        {
+          filename: `Invoice-${invoice.serialNumber}.pdf`,
+          content: pdfBuffer,
+          contentType: "application/pdf",
+        },
+      ],
+    };
+
+    await transporter.sendMail(mailOptions);
+
     res.status(200).json({
       status: "success",
       data: invoiceData,
     });
-    //mail logic
-    // const templatePath = path.resolve("utils", "mailTemplate.html");
-    // const templateSource = fs.readFileSync(templatePath, "utf-8");
-    // const template = handlebars.compile(templateSource);
-    // const filledTemplate = template(invoiceData);
-    
-      const templatePath = path.resolve("utils", "mailTemplate.html");
-      console.log('Template Path:', templatePath);
-    
-      const templateSource = fs.readFileSync(templatePath, "utf-8");
-      console.log('Template Source:', templateSource);
-    
-      const template = handlebars.compile(templateSource);
-       console.log("template>>> ", template)
-      const filledTemplate = template(invoiceData);
-      console.log('Filled Template:', filledTemplate);
-      // const browser = await puppeteer.launch();
-      const browser = await puppeteer.launch({ timeout: 60000 }); // Increased timeout
-      console.log("browser launch", browser);
-      const page = await browser.newPage();
-      console.log("page launch");
-      // Disable timeout for setting content
-      // await page.setContent(filledTemplate);
-      await page.setContent(filledTemplate);
-      console.log("Content set in page");
-      const pdfBuffer = await page.pdf({ format: "A4"});
-      await browser.close();
-      const transporter = nodemailer.createTransport({
-        service: "Outlook",
-        auth: {
-          user:  process.env.OUTLOOK_USER, 
-          pass: process.env.OUTLOOK_PASS,
-        },
-      });
-  
-      const mailOptions = {
-        from: process.env.OUTLOOK_USER,
-        to: userEmail,
-        subject: `Invoice ${invoice.serialNumber}`,
-        text: `Please find attached the invoice ${invoice.serialNumber}.`,
-        attachments: [
-          {
-            filename: `Invoice-${invoice.serialNumber}.pdf`,
-            content: pdfBuffer,
-            contentType: "application/pdf",
-          },
-        ],
-      };
-  
-      await transporter.sendMail(mailOptions);
-      console.log("Email sent");
-    
-    
-    } catch (error) {
-      console.error('Error processing template:', error);
-    }
-    
-
+  } catch (error) {
+    next(error);
+  }
 };
