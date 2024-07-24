@@ -29,7 +29,7 @@
     "nodemailer": "^6.9.13",
     "number-to-words": "^1.2.4",
     "otp-generator": "^4.0.1",
-    "puppeteer": "^22.10.0",
+    "puppeteer": "^22.13.1",
     "qrcode": "^1.5.3",
     "serverless-http": "^3.2.0",
     "serverless-webpack": "^5.13.0",

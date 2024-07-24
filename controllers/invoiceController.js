@@ -10,7 +10,6 @@ import fs from 'fs';
 import path from "path";
 import nodemailer from "nodemailer";
 import handlebars from "handlebars";
-
 import APIFeatures from "../utils/apiFeatures.js";
 import { auth } from "../middleware/Auth.js";
 
@@ -288,14 +287,16 @@ export const generateInvoiceData = async (req, res, next) => {
     };
     console.log("This is invoiceFilledData", invoiceData)
 
-    //mail logic
+    // mail logic
     const templatePath = path.resolve("utils", "mailTemplate.html");
     const templateSource = fs.readFileSync(templatePath, "utf-8");
     const template = handlebars.compile(templateSource);
     const filledTemplate = template(invoiceData);
     
     
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({   headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      timeout: 60000 });
     const page = await browser.newPage();
     await page.setContent(filledTemplate);
     const pdfBuffer = await page.pdf({ format: "A4" });
