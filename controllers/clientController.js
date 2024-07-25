@@ -45,6 +45,11 @@ export const getClient = async (req, res, next) => {
   }
 };
 
+/**
+ * TODO
+ *  1. Ensure all mandatory fields are present
+ *  2. Enforce data validation. Such as mobile number with country code, GSTIN format, email id format, start date, end date etc.
+ */
 export const createClient = async (req, res, next) => {
   try {
     const newClient = await Client.create(req.body);
@@ -60,6 +65,11 @@ export const createClient = async (req, res, next) => {
   }
 };
 
+/**
+ * TODO
+ *  1. Enforce data validation. Same as in create client method above
+ *  2. Ensure that mandatory fields are not unset anyhow
+ */
 export const updateClient = async (req, res, next) => {
   try {
     const client = await Client.findByIdAndUpdate(req.params.id, req.body, {
@@ -84,6 +94,11 @@ export const updateClient = async (req, res, next) => {
     console.log("Error occurred", error);
   }
 };
+
+/**
+ * TODO
+ *  1. Soft Delete Only
+ */
 
 export const deleteClient = async (req, res, next) => {
   try {

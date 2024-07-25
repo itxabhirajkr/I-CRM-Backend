@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import ServiceAgreement from "./serviceAgreementModel.js";
 
 const { Schema, model } = mongoose;
 
@@ -7,7 +6,7 @@ const clientSchema = new Schema({
   acquisitionPersonId: {
     type: Schema.Types.ObjectId,
     ref: "People",
-    required: false,
+    required: true, 
   },
   primaryContactPerson: {
     type: String,
@@ -18,8 +17,19 @@ const clientSchema = new Schema({
     type: String,
     required: true,
   },
-  businessName: String,
-  customerDisplayName: {
+  billingToEmail: {
+    type: String,
+    required: true
+  },
+  billingCcEmail: {
+    type: String,
+    required: true
+  },
+  businessName: {
+    type: String,
+    required: true
+  },
+  displayName: {
     type: String,
     required: true,
   },
@@ -27,34 +37,35 @@ const clientSchema = new Schema({
     type: String,
     required: true,
   },
-  // password: {
-  //   type: String,
-  //   required: true,
-  // },
   primaryContactNumber: {
     type: String,
     required: true,
   },
   secondaryContactNumber: String,
-  GSTTreatment: {
+  gstTreatment: { 
     type: String,
     enum: [
-      "Registered",
-      "Registered – Composition",
-      "Unregistered",
-      "Consumer",
-      "Overseas",
+      "REGISTERED",
+      "REGISTERED_COMPOSITION",
+      "UNREGISTERED",
+      "CONSUMER",
+      "OVERSEAS",
       "SEZ",
     ],
     required: true,
   },
+  gstin: {
+    type: String,
+    required: false,
+  },
   placeOfSupply: {
     type: String,
     required: true,
+    enum: ["OT", "AP", "AR", "AS", "BR", "CT", "GA", "GJ", "HR", "HP", "JH", "KA", "KL", "MP", "MH", "MN", "ML", "MZ", "NL", "OR", "PB", "RJ", "SK", "TN", "TG", "TR", "UP", "UK", "WB", "AN", "CH", "DH", "DL", "JK", "LA", "LD", "PY"]
   },
   taxPreference: {
     type: String,
-    enum: ["Taxable", "Tax Exempt"],
+    enum: ["TAXABLE", "TAX_EXEMPT"], 
     required: true,
   },
   currency: {
@@ -65,18 +76,41 @@ const clientSchema = new Schema({
   openingBalance: {
     type: Number,
     default: 0,
+    required: true
   },
-  enablePortal: {
+  serviceAgreementsFolder: {
     type: String,
-    enum: ["YES", "NO"],
-    required: true,
+    required: true
   },
-  nestedFields: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "ServiceAgreement",
-    },
-  ],
+  ndaFolder: {
+    type: String,
+    required: false
+  },
+  sowFolder: {
+    type: String,
+    required: false
+  },
+  timeZone: {
+    type: String,
+    required: false
+  },
+  birthDay: {
+    type: String,
+    required: false
+  },
+  serviceStartDate: {
+    type: Schema.Types.Date,
+    required: true
+  },
+  serviceEndDate: {
+    type: Schema.Types.Date,
+    required: false
+  },
+  paymentTerm: {
+    type: String,
+    required: true,
+    enum: ["DUE_ON_RECEIPT", "NET_30", "NET_15", "NET_7", "AS_ON_UPWORK"]
+  },
   source: {
     type: String,
     enum: [
@@ -92,6 +126,7 @@ const clientSchema = new Schema({
   manager: {
     type: Schema.Types.ObjectId,
     ref: "People",
+    require: true
   },
   address: String,
   country: String,
@@ -113,11 +148,11 @@ const clientSchema = new Schema({
   },
   receivingAccount: {
     type: String,
-    enum: ["IOB_1173", "IDFC_3481", "ICIC_XXX"],
+    enum: ["IOB_173", "IDF_481", "ICI_749", "UPWORK"],
   },
   receivingCurrency: {
     type: String,
-    enum: ["INR", "OTH"],
+    enum: ["INR", "USD", "OTH"],
   },
   invoicePrefix: String,
   invoiceFrequency: {
