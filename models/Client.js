@@ -183,6 +183,14 @@ const clientSchema = new Schema({
     enum: ["AUD", "NZD", "INR"],
     default: [],
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+  deletedAt: {
+    type: Date,
+    default: null,
+  },
 });
 
 const Client = model("Client", clientSchema);
