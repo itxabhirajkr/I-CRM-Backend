@@ -2,11 +2,26 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
+const sowSchema = new Schema({
+  startDate: {
+    type: Schema.Types.Date,
+    required: true,
+  },
+  endDate: {
+    type: Schema.Types.Date,
+    required: false,
+  },
+  folderUrl: {
+    type: String,
+    required: false,
+  },
+});
+
 const clientSchema = new Schema({
   acquisitionPersonId: {
     type: Schema.Types.ObjectId,
     ref: "People",
-    required: true, 
+    required: true,
   },
   primaryContactPerson: {
     type: String,
@@ -19,20 +34,17 @@ const clientSchema = new Schema({
   },
   billingToEmail: {
     type: String,
-    required: true
+    required: true,
   },
   billingCcEmail: {
     type: String,
-    required: true
+    required: true,
   },
   businessName: {
     type: String,
-    required: true
-  },
-  displayName: {
-    type: String,
     required: true,
   },
+  displayName: String,
   email: {
     type: String,
     required: true,
@@ -42,7 +54,7 @@ const clientSchema = new Schema({
     required: true,
   },
   secondaryContactNumber: String,
-  gstTreatment: { 
+  gstTreatment: {
     type: String,
     enum: [
       "REGISTERED",
@@ -54,18 +66,18 @@ const clientSchema = new Schema({
     ],
     required: true,
   },
-  gstin: {
-    type: String,
-    required: false,
-  },
+  gstin: String,
   placeOfSupply: {
     type: String,
     required: true,
-    enum: ["OT", "AP", "AR", "AS", "BR", "CT", "GA", "GJ", "HR", "HP", "JH", "KA", "KL", "MP", "MH", "MN", "ML", "MZ", "NL", "OR", "PB", "RJ", "SK", "TN", "TG", "TR", "UP", "UK", "WB", "AN", "CH", "DH", "DL", "JK", "LA", "LD", "PY"]
+    enum: [
+      "OT", "AP", "AR", "AS", "BR", "CT", "GA", "GJ", "HR", "HP", "JH", "KA", "KL", "MP", "MH", "MN", "ML", "MZ", "NL", "OR", "PB", "RJ", "SK", "TN", "TG", "TR", "UP", "UK", "WB", 
+      "AN", "CH", "DH", "DL", "JK", "LA", "LD", "PY"
+    ],
   },
   taxPreference: {
     type: String,
-    enum: ["TAXABLE", "TAX_EXEMPT"], 
+    enum: ["TAXABLE", "TAX_EXEMPT"],
     required: true,
   },
   currency: {
@@ -76,40 +88,26 @@ const clientSchema = new Schema({
   openingBalance: {
     type: Number,
     default: 0,
-    required: true
+    required: true,
   },
-  serviceAgreementsFolder: {
+  serviceAgreementsFolderUrl: {
     type: String,
-    required: true
+    required: true,
   },
-  ndaFolder: {
-    type: String,
-    required: false
-  },
-  sowFolder: {
-    type: String,
-    required: false
-  },
-  timeZone: {
-    type: String,
-    required: false
-  },
-  birthDay: {
-    type: String,
-    required: false
-  },
+  ndaFolderUrl: String,
   serviceStartDate: {
     type: Schema.Types.Date,
-    required: true
+    required: true,
   },
   serviceEndDate: {
     type: Schema.Types.Date,
-    required: false
+    required: false,
   },
-  paymentTerm: {
+  sows: [sowSchema],
+  paymentTerms: {
     type: String,
+    enum: ["DUE_ON_RECEIPT", "NET30"],
     required: true,
-    enum: ["DUE_ON_RECEIPT", "NET_30", "NET_15", "NET_7", "AS_ON_UPWORK"]
   },
   source: {
     type: String,
@@ -126,7 +124,7 @@ const clientSchema = new Schema({
   manager: {
     type: Schema.Types.ObjectId,
     ref: "People",
-    require: true
+    required: true,
   },
   address: String,
   country: String,
@@ -145,14 +143,17 @@ const clientSchema = new Schema({
       "CASH_INR",
       "CASH_USD",
     ],
+    required: true,
   },
   receivingAccount: {
     type: String,
-    enum: ["IOB_173", "IDF_481", "ICI_749", "UPWORK"],
+    enum: ["IOB_1173", "IDFC_3481", "ICIC_XXX"],
+    required: true,
   },
   receivingCurrency: {
     type: String,
-    enum: ["INR", "USD", "OTH"],
+    enum: ["INR", "OTH"],
+    required: true,
   },
   invoicePrefix: String,
   invoiceFrequency: {

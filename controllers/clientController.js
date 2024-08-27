@@ -5,7 +5,7 @@ import validator from 'validator';
 
 export const getAllClients = async (req, res, next) => {
   try {
-    const features = new APIFeatures(Client.find(), req.query)
+    const features = new APIFeatures(Client.find({ isDeleted: false }), req.query)
       .filter()
       .sort()
       .limitFields()
@@ -22,12 +22,13 @@ export const getAllClients = async (req, res, next) => {
     });
   } catch (error) {
     console.log("Error occurred", error);
+    next(error);
   }
 };
 
 export const getClient = async (req, res, next) => {
   try {
-    const client = await Client.findById(req.params.id);
+    const client = await Client.findOne({ _id: req.params.id, isDeleted: false });
 
     if (!client) {
       return res.status(404).json({
@@ -44,28 +45,9 @@ export const getClient = async (req, res, next) => {
     });
   } catch (error) {
     console.log("Error occurred", error);
+    next(error);
   }
 };
-
-/**
- * TODO
- *  1. Ensure all mandatory fields are present
- *  2. Enforce data validation. Such as mobile number with country code, GSTIN format, email id format, start date, end date etc.
- */
-// export const createClient = async (req, res, next) => {
-//   try {
-//     const newClient = await Client.create(req.body);
-
-//     res.status(201).json({
-//       status: "success",
-//       data: {
-//         client: newClient,
-//       },
-//     });
-//   } catch (error) {
-//     console.log("Error occurred", error);
-//   }
-// };
 
 export const createClient = [
   // Validation middleware
@@ -80,7 +62,7 @@ export const createClient = [
   body('gstin').optional().matches(/^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/).withMessage('Invalid GSTIN format'),
   body('serviceStartDate').isISO8601().toDate().withMessage('Invalid service start date'),
   body('serviceEndDate').optional().isISO8601().toDate().withMessage('Invalid service end date'),
-  body('paymentTerm').notEmpty().withMessage('Payment Term is required'),
+  body('paymentTerms').notEmpty().withMessage('Payment Terms are required'),
   body('currency').notEmpty().withMessage('Currency is required'),
 
   async (req, res, next) => {
@@ -100,40 +82,10 @@ export const createClient = [
       });
     } catch (error) {
       console.log('Error occurred', error);
-      res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      next(error);
     }
   }
 ];
-
-/**
- * TODO
- *  1. Enforce data validation. Same as in create client method above
- *  2. Ensure that mandatory fields are not unset anyhow
- */
-// export const updateClient = async (req, res, next) => {
-//   try {
-//     const client = await Client.findByIdAndUpdate(req.params.id, req.body, {
-//       new: true,
-//       runValidators: true,
-//     });
-
-//     if (!client) {
-//       return res.status(404).json({
-//         status: "fail",
-//         message: "Client not found",
-//       });
-//     }
-
-//     res.status(200).json({
-//       status: "success",
-//       data: {
-//         client,
-//       },
-//     });
-//   } catch (error) {
-//     console.log("Error occurred", error);
-//   }
-// };
 
 export const updateClient = [
   // Validation middleware
@@ -148,7 +100,7 @@ export const updateClient = [
   body('gstin').optional().matches(/^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/).withMessage('Invalid GSTIN format'),
   body('serviceStartDate').optional().isISO8601().toDate().withMessage('Invalid service start date'),
   body('serviceEndDate').optional().isISO8601().toDate().withMessage('Invalid service end date'),
-  body('paymentTerm').optional().notEmpty().withMessage('Payment Term is required'),
+  body('paymentTerms').optional().notEmpty().withMessage('Payment Terms are required'),
   body('currency').optional().notEmpty().withMessage('Currency is required'),
 
   async (req, res, next) => {
@@ -163,7 +115,7 @@ export const updateClient = [
         runValidators: true,
       });
 
-      if (!client) {
+      if (!client || client.isDeleted) {
         return res.status(404).json({
           status: 'fail',
           message: 'Client not found',
@@ -178,35 +130,10 @@ export const updateClient = [
       });
     } catch (error) {
       console.log('Error occurred', error);
-      res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      next(error);
     }
   }
 ];
-
-/**
- * TODO
- *  1. Soft Delete Only
- */
-
-// export const deleteClient = async (req, res, next) => {
-//   try {
-//     const client = await Client.findByIdAndDelete(req.params.id);
-
-//     if (!client) {
-//       return res.status(404).json({
-//         status: "fail",
-//         message: "Client not found",
-//       });
-//     }
-
-//     res.status(204).json({
-//       status: "success",
-//       data: null,
-//     });
-//   } catch (error) {
-//     console.log("Error occurred", error);
-//   }
-// };
 
 export const deleteClient = async (req, res, next) => {
   try {
@@ -229,6 +156,6 @@ export const deleteClient = async (req, res, next) => {
     });
   } catch (error) {
     console.log('Error occurred', error);
-    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    next(error);
   }
 };

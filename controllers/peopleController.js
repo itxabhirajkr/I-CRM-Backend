@@ -1,8 +1,17 @@
 import People from "../models/People.js";
 import APIFeatures from "../utils/apiFeatures.js";
+
 // Create a new person
 async function createPerson(req, res) {
   try {
+    // Ensure conditional fields are provided
+    if (req.body.nature === "WORKER_UNDER_CONTRACTOR" && !req.body.contractorId) {
+      return res.status(400).json({ message: "contractorId is required for WORKER_UNDER_CONTRACTOR." });
+    }
+    if (req.body.nature === "EMPLOYEE" && !req.body.employeeId) {
+      return res.status(400).json({ message: "employeeId is required for EMPLOYEE." });
+    }
+
     const person = new People(req.body);
     const result = await person.save();
     res.status(201).json(result);
@@ -12,15 +21,6 @@ async function createPerson(req, res) {
 }
 
 // Get all people
-// async function getPeople(req, res) {
-//   try {
-//     const people = await People.find();
-//     res.json(people);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// }
-
 const getPeople = async (req, res, next) => {
   try {
     const features = new APIFeatures(People.find(), req.query)
@@ -60,12 +60,24 @@ async function getPersonById(req, res) {
 // Update a person by ID
 async function updatePerson(req, res) {
   try {
+    // Fetch the current person data
+    const currentPerson = await People.findById(req.params.id);
+    if (!currentPerson) {
+      return res.status(404).json({ message: "Person not found" });
+    }
+
+    if (req.body.nature) {
+      if (req.body.nature === "WORKER_UNDER_CONTRACTOR" && !req.body.contractorId) {
+        return res.status(400).json({ message: "contractorId is required for WORKER_UNDER_CONTRACTOR." });
+      }
+      if (req.body.nature === "EMPLOYEE" && !req.body.employeeId) {
+        return res.status(400).json({ message: "employeeId is required for EMPLOYEE." });
+      }
+    }
+
     const person = await People.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!person) {
-      return res.status(404).json({ message: "Person not found" });
-    }
     res.json(person);
   } catch (error) {
     res.status(500).json({ message: error.message });

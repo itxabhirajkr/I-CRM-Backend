@@ -12,7 +12,7 @@ const peopleSchema = new Schema({
       "EMPLOYEE",
       "REFERRAL_PARTNER",
     ],
-    required: true,
+    // required: true,
   },
   contractorId: {
     type: Schema.Types.ObjectId,
@@ -22,36 +22,32 @@ const peopleSchema = new Schema({
   },
   workEmail: {
     type: String,
-    required: true,
+    // required: true,
   },
   personalEmail: {
     type: String,
-    required: false,
+    // required: true,
   },
   billingEmail: {
     type: String,
-    required: false,
+    // required: true,
   },
   mobile: {
     type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
+    // required: true,
   },
   displayName: {
     type: String,
-    required: true,
+    // required: true,
   },
   officialName: {
     type: String,
-    required: false,
+    // required: true,
   },
   department: {
     type: String,
     enum: ["Engineering", "Sales", "OutsideInzint"],
-    required: true,
+    // required: true,
   },
   employeeId: {
     type: String,
@@ -88,8 +84,18 @@ const peopleSchema = new Schema({
       return this.nature !== "REFERRAL_PARTNER";
     },
   },
-  bankAccountNumber: String,
-  ifscCode: String,
+  bankAccountNumber: {
+    type: String,
+    required: function () {
+      return this.nature !== "REFERRAL_PARTNER";
+    },
+  },
+  ifscCode: {
+    type: String,
+    required: function () {
+      return this.nature !== "REFERRAL_PARTNER";
+    },
+  },
   paymentChannel: {
     type: String,
     enum: [
@@ -97,12 +103,12 @@ const peopleSchema = new Schema({
       "International Bank Transfer",
       "Via Third Party",
     ],
-    required: false,
+    // required: true,
   },
   paymentMode: {
     type: String,
     enum: ["International Wire", "Wise", "NEFT", "Cheque", "Cash"],
-    required: false,
+    // required: true,
   },
   panUrl: String,
   aadhaarFrontUrl: String,
