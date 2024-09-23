@@ -1,5 +1,5 @@
+import serverless from 'serverless-http';
 import express from "express";
-import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import connect from "./config/database.js";
@@ -42,10 +42,12 @@ app.use('/invoices', invoiceRoutes);
 app.use('/purchaseItems', purchaseItemRoutes);
 app.use('/purchaseOrder', purchaseOrderRoutes);
 
-const PORT = process.env.PORT || 3300;
+// const PORT = process.env.PORT || 3300;
 
-const server = app.listen(PORT, () => {
-  console.log(`Server now up and running on port ${PORT}`);
-});
+// const server = app.listen(PORT, () => {
+//   console.log(`Server now up and running on port ${PORT}`);
+// });
 
-export default server;
+// export default server;
+
+module.exports.handler = serverless(app);

@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
     "dev": "cross-env NODE_ENV=development sls offline start --stage offline",
-    "offline": "NODE_ENV=development sls offline start --stage offline"
+    "offline": "NODE_ENV=development sls offline start --stage offline",
+    "deploy:dev": "NODE_ENV=development serverless deploy --aws-profile inzint-internal --stage development"
   },
   "keywords": [],
   "author": "",
