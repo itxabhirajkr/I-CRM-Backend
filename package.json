@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
-    "dev": "cross-env NODE_ENV=development sls offline start --stage offline"
+    "dev": "cross-env NODE_ENV=development sls offline start --stage offline",
+    "offline": "NODE_ENV=development sls offline start --stage offline"
   },
   "keywords": [],
   "author": "",

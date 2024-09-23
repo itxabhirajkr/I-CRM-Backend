@@ -1,2 +1,3 @@
 npm start will run the local server
-npm run dev will run serverless 
+npm run dev will run serverless on Windows
+npm run offline will run serverless on Mac or Lunix
