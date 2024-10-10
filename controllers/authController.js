@@ -9,28 +9,22 @@ import Profile from "../models/Profile.js";
 import dotenv from "dotenv";
 
 dotenv.config();
-export const fakeApi = async (req,res)=> {
+export const fakeApi = async (req, res) => {
   try {
-     return res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "OK",
-    });; 
+    });
   } catch (error) {
-     console.log(error)
+    console.log(error);
   }
-}
+};
 
 // Signup Controller for Registering Root User
 export const signupRootUser = async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword,
-      userType,
-    } = req.body;
+    const { firstName, lastName, email, password, confirmPassword, userType } =
+      req.body;
 
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
       return res.status(403).send({
@@ -65,13 +59,13 @@ export const signupRootUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     // const approved = accountType === "Instructor" ? false : true;
-      // Create the Additional Profile For User
-      const profileDetails = await Profile.create({
-        gender: null,
-        dateOfBirth: null,
-        about: null,
-        contactNumber: null,
-      })
+    // Create the Additional Profile For User
+    const profileDetails = await Profile.create({
+      gender: null,
+      dateOfBirth: null,
+      about: null,
+      contactNumber: null,
+    });
     const user = await User.create({
       firstName,
       lastName,
@@ -93,6 +87,35 @@ export const signupRootUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "User cannot be registered. Please try again.",
+    });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json({
+      message: "Users retrieved successfully",
+      users: users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Unable to fetch users",
+      error: error.message,
+    });
+  }
+};
+export const getManagers = async (req, res) => {
+  try {
+    const managers = await User.find({ userType: "PROJECT_MANAGER" });
+    return res.status(200).json({
+      message: "Users retrieved successfully",
+      managers: managers,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Unable to fetch users",
+      error: error.message,
     });
   }
 };
@@ -191,6 +214,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log(email, "i am email");
     const user = await User.findOne({ email }).populate("additionalDetails");
 
     if (!user) {
