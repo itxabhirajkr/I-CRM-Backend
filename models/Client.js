@@ -1,33 +1,29 @@
 import mongoose from "mongoose";
+import User from "./User.js";
+import { getCodeList } from "country-list";
 
 const { Schema, model } = mongoose;
-
-const sowSchema = new Schema({
-  startDate: {
-    type: Schema.Types.Date,
-    required: true,
-  },
-  endDate: {
-    type: Schema.Types.Date,
-    required: false,
-  },
-  folderUrl: {
-    type: String,
-    required: false,
-  },
-});
+const gstinRegex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/;
+const countries = getCodeList();
+const iso2Codes = Object.keys(countries);
+console.log(iso2Codes);
 
 const clientSchema = new Schema({
   acquisitionPersonId: {
     type: Schema.Types.ObjectId,
-    ref: "People",
+    ref: "User",
     required: true,
   },
   primaryContactPerson: {
     type: String,
     required: true,
   },
-  l2ContactPerson: String,
+  l2ContactPerson: {
+    type: String,
+    match: /^[A-Za-z\s-]+$/,
+    message:
+      "l2ContactPerson should not contain numbers or symbols except hyphen.",
+  },
   billingContactPerson: {
     type: String,
     required: true,
@@ -35,10 +31,11 @@ const clientSchema = new Schema({
   billingToEmail: {
     type: String,
     required: true,
+    match: [/.+\@.+\..+/, "Please fill a valid email address"],
   },
   billingCcEmail: {
     type: String,
-    required: true,
+    match: [/.+\@.+\..+/, "Please fill a valid email address"],
   },
   businessName: {
     type: String,
@@ -47,7 +44,6 @@ const clientSchema = new Schema({
   displayName: String,
   email: {
     type: String,
-    required: true,
   },
   primaryContactNumber: {
     type: String,
@@ -57,7 +53,7 @@ const clientSchema = new Schema({
   gstTreatment: {
     type: String,
     enum: [
-      "REGISTERED",
+      " ",
       "REGISTERED_COMPOSITION",
       "UNREGISTERED",
       "CONSUMER",
@@ -66,13 +62,78 @@ const clientSchema = new Schema({
     ],
     required: true,
   },
-  gstin: String,
+  gstin: {
+    type: String,
+    validate: {
+      validator: function (value) {
+        if (
+          this.gstTreatment === "REGISTERED" ||
+          this.gstTreatment === "REGISTERED_COMPOSITION"
+        ) {
+          return gstinRegex.test(value);
+        }
+        return true;
+      },
+      message: (props) => `${props.value} is not a valid GSTIN format.`,
+    },
+  },
+  serviceAgreementFolderUrl: {
+    type: String,
+    required: true,
+    match: [
+      /^(https?:\/\/[^\s$.?#].[^\s]*|www\.[^\s$.?#].[^\s]*|ftp:\/\/[^\s$.?#].[^\s]*)$/,
+      "Please provide a valid URL.",
+    ],
+  },
+  ndaFolderUrl: {
+    type: String,
+    match: [
+      /^(https?:\/\/[^\s$.?#].[^\s]*|www\.[^\s$.?#].[^\s]*|ftp:\/\/[^\s$.?#].[^\s]*)$/,
+      "Please provide a valid URL.",
+    ],
+  },
+
   placeOfSupply: {
     type: String,
     required: true,
     enum: [
-      "OT", "AP", "AR", "AS", "BR", "CT", "GA", "GJ", "HR", "HP", "JH", "KA", "KL", "MP", "MH", "MN", "ML", "MZ", "NL", "OR", "PB", "RJ", "SK", "TN", "TG", "TR", "UP", "UK", "WB", 
-      "AN", "CH", "DH", "DL", "JK", "LA", "LD", "PY"
+      "OT",
+      "AP",
+      "AR",
+      "AS",
+      "BR",
+      "CT",
+      "GA",
+      "GJ",
+      "HR",
+      "HP",
+      "JH",
+      "KA",
+      "KL",
+      "MP",
+      "MH",
+      "MN",
+      "ML",
+      "MZ",
+      "NL",
+      "OR",
+      "PB",
+      "RJ",
+      "SK",
+      "TN",
+      "TG",
+      "TR",
+      "UP",
+      "UK",
+      "WB",
+      "AN",
+      "CH",
+      "DH",
+      "DL",
+      "JK",
+      "LA",
+      "LD",
+      "PY",
     ],
   },
   taxPreference: {
@@ -80,21 +141,11 @@ const clientSchema = new Schema({
     enum: ["TAXABLE", "TAX_EXEMPT"],
     required: true,
   },
-  currency: {
-    type: String,
-    enum: ["USD"],
-    required: true,
-  },
   openingBalance: {
     type: Number,
     default: 0,
     required: true,
   },
-  serviceAgreementsFolderUrl: {
-    type: String,
-    required: true,
-  },
-  ndaFolderUrl: String,
   serviceStartDate: {
     type: Schema.Types.Date,
     required: true,
@@ -103,7 +154,6 @@ const clientSchema = new Schema({
     type: Schema.Types.Date,
     required: false,
   },
-  sows: [sowSchema],
   paymentTerms: {
     type: String,
     enum: ["DUE_ON_RECEIPT", "NET30"],
@@ -111,6 +161,7 @@ const clientSchema = new Schema({
   },
   source: {
     type: String,
+    required: true,
     enum: [
       "UPWORK",
       "LINKEDIN",
@@ -119,15 +170,27 @@ const clientSchema = new Schema({
       "REFERRENCE",
       "ZOOMINFO",
       "PERSONAL_NETWORK",
+      "COGNISM",
+    ],
+  },
+  sowFolderUrl: {
+    type: String,
+    match: [
+      /^(https?:\/\/[^\s$.?#].[^\s]*|www\.[^\s$.?#].[^\s]*|ftp:\/\/[^\s$.?#].[^\s]*)$/,
+      "Please provide a valid URL.",
     ],
   },
   manager: {
     type: Schema.Types.ObjectId,
-    ref: "People",
+    ref: "User",
     required: true,
   },
   address: String,
-  country: String,
+  country: {
+    type: String,
+    required: true,
+    enum: iso2Codes,
+  },
   paymentChannel: {
     type: String,
     enum: [
@@ -145,6 +208,7 @@ const clientSchema = new Schema({
     ],
     required: true,
   },
+
   receivingAccount: {
     type: String,
     enum: ["IOB_1173", "IDFC_3481", "ICIC_XXX"],
@@ -152,10 +216,41 @@ const clientSchema = new Schema({
   },
   receivingCurrency: {
     type: String,
-    enum: ["INR", "OTH"],
+    enum: [
+      "INR",
+      "USD",
+      "AUD",
+      "NZD",
+      "SGD",
+      "AED",
+      "OMR",
+      "GBP",
+      "EUR",
+      "CAD",
+    ],
     required: true,
   },
-  invoicePrefix: String,
+  invoiceCurrency: {
+    type: String,
+    enum: [
+      "INR",
+      "AUD",
+      "USD",
+      "NZD",
+      "SGD",
+      "AED",
+      "OMR",
+      "GBP",
+      "EUR",
+      "CAD",
+    ],
+    required: true,
+  },
+  invoicePrefix: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   invoiceFrequency: {
     type: String,
     enum: [
@@ -170,19 +265,34 @@ const clientSchema = new Schema({
       "FORTNIGHTLY_MONDAY_EVEN_WEEKS",
       "FORTNIGHTLY_MONDAY_ODD_WEEKS",
     ],
+    required: true,
   },
   invoiceDelivery: {
     type: String,
     enum: ["AUTOMATIC_TO_EMAIL", "AUTOMATIC_VIA_ASANA", "MANUAL"],
+    required: true,
   },
   invoiceFollowupPlan: {
     type: String,
     enum: ["7_15", "15_20", "25_30"],
+    required: true,
   },
   invoiceDisplayCurrencies: {
     type: [String],
-    enum: ["AUD", "NZD", "INR"],
+    enum: [
+      "INR",
+      "USD",
+      "AUD",
+      "NZD",
+      "SGD",
+      "AED",
+      "OMR",
+      "GBP",
+      "EUR",
+      "CAD",
+    ],
     default: [],
+    required: true,
   },
   isDeleted: {
     type: Boolean,
