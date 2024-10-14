@@ -1,0 +1,47 @@
+service: icrm
+useDotenv: true
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+   MONGODB_URL: ${env:MONGODB_URL}
+   RESEND_API: ${env:RESEND_API}
+   JWT_SECRET: ${env:JWT_SECRET}
+   OPENSSL_CONF: ${env:OPENSSL_CONF}
+   PORT: ${env:PORT}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - apigateway:*
+        - lambda:*
+        - execute-api:Invoke
+      Resource: "*"
+
+functions:
+  app:
+    handler: server.handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
+
+plugins:
+  - serverless-offline
+
+package:
+  exclude:
+    - node_modules/**
+    - .gitignore
+    - .env
+    - .git/**
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+    host: localhost
+
+
+

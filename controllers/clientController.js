@@ -63,18 +63,21 @@ export const createClient = [
   body("billingContactPerson")
     .notEmpty()
     .withMessage("Billing Contact Person is required"),
-  body("displayName").notEmpty().withMessage("Display Name is required"),
-  body("businessName").notEmpty().withMessage("Business Name is required"),
-  body("primaryContactNumber")
-    .matches(/^\+[1-9]\d{1,14}$/)
-    .withMessage("Invalid primary contact number format"),
   body("billingToEmail")
     .isEmail()
     .withMessage("Invalid email format for billingToEmail"),
   body("billingCcEmail")
     .isEmail()
     .withMessage("Invalid email format for billingCcEmail"),
-
+  body("businessName").notEmpty().withMessage("Business Name is required"),
+  body("displayName").notEmpty().withMessage("Display Name is required"),
+  body("primaryContactNumber")
+    .matches(/^\+[1-9]\d{1,14}$/)
+    .withMessage("Invalid primary contact number format"),
+  body("gstin")
+    .optional()
+    .matches(/^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/)
+    .withMessage("Invalid GSTIN format"),
   body("serviceStartDate")
     .isISO8601()
     .toDate()
@@ -112,56 +115,36 @@ export const createClient = [
 export const updateClient = [
   // Validation middleware
   body("primaryContactPerson")
-    .optional()
-    .notEmpty()
-    .withMessage("Primary Contact Person is required"),
-  body("billingContactPerson")
-    .optional()
-    .notEmpty()
-    .withMessage("Billing Contact Person is required"),
-  body("billingToEmail")
-    .optional()
-    .isEmail()
-    .withMessage("Invalid email format for billingToEmail"),
-  body("billingCcEmail")
-    .optional()
-    .isEmail()
-    .withMessage("Invalid email format for billingCcEmail"),
-  body("businessName")
-    .optional()
-    .notEmpty()
-    .withMessage("Business Name is required"),
-  body("displayName")
-    .optional()
-    .notEmpty()
-    .withMessage("Display Name is required"),
-  body("email")
-    .optional()
-    .isEmail()
-    .withMessage("Invalid email format for email"),
-  body("primaryContactNumber")
-    .optional()
-    .matches(/^\+[1-9]\d{1,14}$/)
-    .withMessage("Invalid primary contact number format"),
-  body("gstin")
-    .optional()
-    .matches(/^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/)
-    .withMessage("Invalid GSTIN format"),
-  body("serviceStartDate")
-    .optional()
-    .isISO8601()
-    .toDate()
-    .withMessage("Invalid service start date"),
-  body("serviceEndDate")
-    .optional()
-    .isISO8601()
-    .toDate()
-    .withMessage("Invalid service end date"),
-  body("paymentTerms")
-    .optional()
-    .notEmpty()
-    .withMessage("Payment Terms are required"),
-  body("currency").optional().notEmpty().withMessage("Currency is required"),
+  .notEmpty()
+  .withMessage("Primary Contact Person is required"),
+body("billingContactPerson")
+  .notEmpty()
+  .withMessage("Billing Contact Person is required"),
+body("billingToEmail")
+  .isEmail()
+  .withMessage("Invalid email format for billingToEmail"),
+body("billingCcEmail")
+  .isEmail()
+  .withMessage("Invalid email format for billingCcEmail"),
+body("businessName").notEmpty().withMessage("Business Name is required"),
+body("displayName").notEmpty().withMessage("Display Name is required"),
+body("primaryContactNumber")
+  .matches(/^\+[1-9]\d{1,14}$/)
+  .withMessage("Invalid primary contact number format"),
+body("gstin")
+  .optional()
+  .matches(/^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/)
+  .withMessage("Invalid GSTIN format"),
+body("serviceStartDate")
+  .isISO8601()
+  .toDate()
+  .withMessage("Invalid service start date"),
+body("serviceEndDate")
+  .optional()
+  .isISO8601()
+  .toDate()
+  .withMessage("Invalid service end date"),
+body("paymentTerms").notEmpty().withMessage("Payment Terms are required"),
 
   async (req, res, next) => {
     const errors = validationResult(req);
