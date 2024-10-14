@@ -49,5 +49,5 @@ app.use('/purchaseOrder', purchaseOrderRoutes);
 // });
 
 // export default server;
-
-module.exports.handler = serverless(app);
+const handler = serverless(app);
+export default handler;
