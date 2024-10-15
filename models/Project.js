@@ -14,7 +14,8 @@ const resourceSchema = new Schema({
     enum: [5, 10, 15, 20, 25, 30, 35, 40],
     required: true,
   },
-  startDate: Date,
+  startDate: { type: Date, required: true },
+
   endDate: Date,
   acquisitionPersonId: {
     type: String,

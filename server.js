@@ -42,11 +42,5 @@ app.use('/invoices', invoiceRoutes);
 app.use('/purchaseItems', purchaseItemRoutes);
 app.use('/purchaseOrder', purchaseOrderRoutes);
 
-// const PORT = process.env.PORT || 3300;
 
-// const server = app.listen(PORT, () => {
-//   console.log(`Server now up and running on port ${PORT}`);
-// });
-
-// export default server;
 export const handler = serverless(app);
