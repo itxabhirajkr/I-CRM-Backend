@@ -3,6 +3,7 @@ useDotenv: true
 provider:
   name: aws
   runtime: nodejs18.x
+  timeout: 600
   region: ap-south-1
   stage: ${opt:stage, 'dev'}
   environment:

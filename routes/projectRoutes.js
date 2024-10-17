@@ -7,6 +7,11 @@ import {
   deleteProject,
   // getClientFromProject,
 } from "../controllers/projectController.js";
+import {
+  createProjectResource,
+  getPersonAllocation,
+  getProjectResources,
+} from "../controllers/ResourceController.js";
 
 const router = express.Router();
 
@@ -26,5 +31,9 @@ router.put("/:id", updateProject);
 
 // Delete a project by ID
 router.delete("/:id", deleteProject);
+
+router.post("/:projectId/create-project", createProjectResource);
+router.get("/:personId/get-project-allocation", getPersonAllocation);
+router.get("/:projectId/get-project-resources", getProjectResources);
 
 export default router;
