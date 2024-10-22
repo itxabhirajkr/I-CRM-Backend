@@ -13,27 +13,29 @@ import {
   getProjectResources,
 } from "../controllers/ResourceController.js";
 
+import { auth } from "../middleware/Auth.js";
+
 const router = express.Router();
 
 // Create a new project
-router.post("/", createProject);
+router.post("/", auth, createProject);
 
 // Get all projects
-router.get("/", getAllProjects);
+router.get("/", auth, getAllProjects);
 
 // Get a specific project by ID
-router.get("/:id", getProject);
+router.get("/:id", auth, getProject);
 
 // router.get("/projID/:id", getClientFromProject);
 
 // Update a project by ID
-router.put("/:id", updateProject);
+router.put("/:id", auth, updateProject);
 
 // Delete a project by ID
-router.delete("/:id", deleteProject);
+router.delete("/:id", auth, deleteProject);
 
-router.post("/:projectId/create-project", createProjectResource);
-router.get("/:personId/get-project-allocation", getPersonAllocation);
-router.get("/:projectId/get-project-resources", getProjectResources);
+router.post("/:projectId/create-project", auth, createProjectResource);
+router.get("/:personId/get-project-allocation", auth, getPersonAllocation);
+router.get("/:projectId/get-project-resources", auth, getProjectResources);
 
 export default router;

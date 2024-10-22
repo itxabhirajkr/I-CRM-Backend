@@ -19,7 +19,7 @@ const resourceSchema = new Schema({
   endDate: Date,
   acquisitionPersonId: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: "People",
   },
   billability: {
     type: String,

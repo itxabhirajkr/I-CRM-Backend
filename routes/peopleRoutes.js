@@ -5,7 +5,10 @@ import {
   getPersonById,
   updatePerson,
   deletePerson,
+  loginPerson,
+  getManagers,
 } from "../controllers/peopleController.js";
+import { auth } from "../middleware/Auth.js";
 
 const router = express.Router();
 
@@ -13,7 +16,11 @@ const router = express.Router();
 router.post("/create", createPerson);
 
 // Get all people
-router.get("/", getPeople);
+router.get("/getPeople", auth, getPeople);
+
+router.get("/getManagers", auth, getManagers);
+
+router.post("/loginPerson", loginPerson);
 
 // Get a specific person by ID
 router.get("/:id", getPersonById);

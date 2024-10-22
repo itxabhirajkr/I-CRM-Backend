@@ -214,7 +214,6 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log(email, "i am email");
     const user = await User.findOne({ email }).populate("additionalDetails");
 
     if (!user) {

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import User from "./User.js";
 import { getCodeList } from "country-list";
 
 const { Schema, model } = mongoose;
@@ -11,7 +10,7 @@ console.log(iso2Codes);
 const clientSchema = new Schema({
   acquisitionPersonId: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: "People",
     required: true,
   },
   primaryContactPerson: {
@@ -182,7 +181,7 @@ const clientSchema = new Schema({
   },
   manager: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: "People",
     required: true,
   },
   address: String,

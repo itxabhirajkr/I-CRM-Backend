@@ -4,6 +4,7 @@ import User from "../models/User.js";
 
 dotenv.config();
 
+
 // export const auth = async (req, res, next) => {
 // 	try {
 // 		const token =
@@ -35,10 +36,9 @@ dotenv.config();
 
 export const auth = async (req, res, next) => {
   try {
-    let token =
-      req.cookies.token ||
-      req.body.token ||
-      req.header("Authorization")?.replace("Bearer ", "");
+   
+    let token = req.cookies.authToken;
+
 
     // Skip token verification for root user
     // if (req.user && req.user.userType === "ROOT") {
@@ -47,7 +47,9 @@ export const auth = async (req, res, next) => {
 
     // If no token is provided, return a 401 response
     if (!token) {
-      return res.status(401).json({ success: false, message: `Token Missing` });
+      return res
+        .status(401)
+        .json({ success: false, message: `Unauthorized Request` });
     }
 
     // Verify the token
