@@ -1,6 +1,7 @@
 import Project from "../models/Project.js";
 import APIFeatures from "../utils/apiFeatures.js";
 import mongoose from "mongoose";
+import connect from "../config/database.js";
 
 export const createProjectResource = async (req, res) => {
   const { projectId } = req.params;
@@ -24,8 +25,6 @@ export const createProjectResource = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-
-
 
 export const updateProjectResource = async (req, res) => {
   const { projectId, resourceId } = req.params;
@@ -80,7 +79,8 @@ export const getProjectResources = async (req, res) => {
   const { projectId } = req.params;
   try {
     const project = await Project.findById(projectId)
-      .select("resources").populate("resources.personId")
+      .select("resources")
+      .populate("resources.personId");
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
@@ -90,5 +90,27 @@ export const getProjectResources = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateOvertimeAllocationStatus = async () => {
+  const today = new Date();
+  connect();
+  try {
+    const result = await Project.updateMany(
+      { "resources.overtimeAllocations.endDate": { $lt: today } }, 
+      {
+        $set: {
+          "resources.$[].overtimeAllocations.$[allocation].status": "INACTIVE", 
+        },
+      },
+      {
+        arrayFilters: [
+          { "allocation.endDate": { $lt: today } }, 
+        ],
+      }
+    );
+  } catch (error) {
+    console.error("Error updating overtime allocations:", error);
   }
 };

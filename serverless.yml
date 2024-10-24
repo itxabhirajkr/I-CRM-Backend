@@ -28,6 +28,12 @@ functions:
           path: /{proxy+}
           method: any
           cors: true
+  checkOvertimeAllocations:
+    handler: controllers/ResourceController.updateOvertimeAllocationStatus
+    events:
+      - schedule:
+          rate: cron(30 18 * * *)
+          enabled: true
 
 plugins:
   - serverless-offline

@@ -59,6 +59,11 @@ const resourceSchema = new Schema({
         type: Number,
         required: true,
       },
+      status: {
+        type: String,
+        enum: ["INACTIVE", "ACTIVE"],
+        default: "INACTIVE",
+      },
     },
   ],
 });
