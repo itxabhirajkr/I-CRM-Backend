@@ -25,6 +25,31 @@ export const createProjectResource = async (req, res) => {
   }
 };
 
+
+
+export const updateProjectResource = async (req, res) => {
+  const { projectId, resourceId } = req.params;
+  const updatedResourceData = req.body;
+
+  try {
+    // Find the project by projectId and the resource by resourceId
+    const project = await Project.findOneAndUpdate(
+      { _id: projectId, "resources._id": resourceId },
+      { $set: { "resources.$": updatedResourceData } },
+      { new: true, runValidators: true }
+    );
+
+    if (!project) {
+      return res.status(404).json({ message: "Project or resource not found" });
+    }
+
+    return res.status(200).json(project);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const getPersonAllocation = async (req, res) => {
   const { personId } = req.params;
   const saos = await Project.find();

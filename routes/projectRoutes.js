@@ -11,6 +11,7 @@ import {
   createProjectResource,
   getPersonAllocation,
   getProjectResources,
+  updateProjectResource,
 } from "../controllers/ResourceController.js";
 
 import { auth } from "../middleware/Auth.js";
@@ -35,6 +36,12 @@ router.put("/:id", auth, updateProject);
 router.delete("/:id", auth, deleteProject);
 
 router.post("/:projectId/create-project", auth, createProjectResource);
+router.post(
+  "/:projectId/:resourceId/update-project-resource",
+  auth,
+  updateProjectResource
+);
+
 router.get("/:personId/get-project-allocation", auth, getPersonAllocation);
 router.get("/:projectId/get-project-resources", auth, getProjectResources);
 

@@ -49,9 +49,8 @@ const resourceSchema = new Schema({
   ],
   overtimeAllocations: [
     {
-      year: Number,
-      fromWeek: Number,
-      toWeek: Number,
+      startDate: Schema.Types.Date,
+      endDate: Schema.Types.Date,
       hours: {
         type: Number,
         required: true,

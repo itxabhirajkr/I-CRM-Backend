@@ -242,7 +242,7 @@ const clientSchema = new Schema({
       "GBP",
       "EUR",
       "CAD",
-    ],
+    ],  
     required: true,
   },
   invoicePrefix: {
