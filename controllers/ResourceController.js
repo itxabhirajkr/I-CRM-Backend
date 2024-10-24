@@ -95,19 +95,17 @@ export const getProjectResources = async (req, res) => {
 
 export const updateOvertimeAllocationStatus = async () => {
   const today = new Date();
-  connect();
+  await connect();
   try {
     const result = await Project.updateMany(
-      { "resources.overtimeAllocations.endDate": { $lt: today } }, 
+      { "resources.overtimeAllocations.endDate": { $lt: today } },
       {
         $set: {
-          "resources.$[].overtimeAllocations.$[allocation].status": "INACTIVE", 
+          "resources.$[].overtimeAllocations.$[allocation].status": "INACTIVE",
         },
       },
       {
-        arrayFilters: [
-          { "allocation.endDate": { $lt: today } }, 
-        ],
+        arrayFilters: [{ "allocation.endDate": { $lt: today } }],
       }
     );
   } catch (error) {

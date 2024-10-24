@@ -39,8 +39,8 @@ plugins:
   - serverless-offline
 
 package:
+  excludeDevDependencies: true
   exclude:
-    - node_modules/**
     - .gitignore
     - .env
     - .git/**
