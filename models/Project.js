@@ -12,7 +12,6 @@ const resourceSchema = new Schema({
   defaultAllocation: {
     type: Number,
     enum: [5, 10, 15, 20, 25, 30, 35, 40],
-    required: true,
   },
   startDate: { type: Date, required: true },
 
@@ -41,12 +40,12 @@ const resourceSchema = new Schema({
         "Billing rate must be a non-zero positive value if Billability is Billable",
     },
   },
-  billableHours: [
-    {
-      week: Number,
-      hours: Number,
-    },
-  ],
+
+  shadowOf: {
+    type: Schema.Types.ObjectId,
+    ref: "People",
+  },
+
   overtimeAllocations: [
     {
       startDate: Schema.Types.Date,
