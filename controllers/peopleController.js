@@ -57,12 +57,13 @@ const getPeople = async (req, res, next) => {
   }
 };
 
-
-
 // Get all people with peopleType as PROJECT_MANAGER
 export const getManagers = async (req, res, next) => {
   try {
-    const features = new APIFeatures(People.find({peopleType: "PROJECT_MANAGER"}), req.query)
+    const features = new APIFeatures(
+      People.find({ peopleType: "PROJECT_MANAGER" }),
+      req.query
+    )
       // .search()
       .filter()
       .sort()
@@ -176,7 +177,7 @@ export const loginPerson = async (req, res) => {
         secure: process.env.NODE_ENV === "production",
         sameSite: "Strict",
         maxAge: 24 * 60 * 60 * 1000,
-      }); 
+      });
 
       await person.save();
 
@@ -185,7 +186,7 @@ export const loginPerson = async (req, res) => {
         token,
         user: {
           _id: person._id,
-          firstName: person.firstName,
+          firstName: person.displayName,
           lastName: person.lastName,
           email: person.email,
           userType: person.userType,

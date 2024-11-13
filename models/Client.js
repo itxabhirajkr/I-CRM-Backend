@@ -52,7 +52,7 @@ const clientSchema = new Schema({
   gstTreatment: {
     type: String,
     enum: [
-      " ",
+      "REGISTERED",
       "REGISTERED_COMPOSITION",
       "UNREGISTERED",
       "CONSUMER",
@@ -190,6 +190,10 @@ const clientSchema = new Schema({
     required: true,
     enum: iso2Codes,
   },
+  state: {
+    type: String,
+  },
+
   paymentChannel: {
     type: String,
     enum: [
@@ -242,7 +246,7 @@ const clientSchema = new Schema({
       "GBP",
       "EUR",
       "CAD",
-    ],  
+    ],
     required: true,
   },
   invoicePrefix: {

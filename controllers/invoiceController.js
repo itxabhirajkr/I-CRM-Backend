@@ -6,7 +6,7 @@ import Project from "../models/Project.js";
 import QRCode from "qrcode";
 import numberToWords from "number-to-words";
 import puppeteer from "puppeteer";
-import fs from 'fs';
+import fs from "fs";
 import path from "path";
 import nodemailer from "nodemailer";
 import handlebars from "handlebars";
@@ -21,7 +21,14 @@ export const getAllInvoices = async (req, res, next) => {
       .limitFields()
       .paginate();
 
+    features.query = features.query
+      .populate("clientId")
+      .populate("projectId")
+      .populate("reviewedBy");
+
     const invoices = await features.query;
+
+    console.log(invoices, "sqi");
 
     res.status(200).json({
       status: "success",
@@ -59,7 +66,74 @@ export const getInvoice = async (req, res, next) => {
 
 export const createInvoice = async (req, res, next) => {
   try {
-    const newInvoice = await Invoice.create(req.body);
+    const {
+      invoiceNumber = null,
+      invoiceDate = new Date(), // Default to current date if not provided
+      dueDate = null,
+      amountReceived = 0,
+      previousDues = 0,
+      currency = "USD", // Default currency if none provided
+      business = {},
+      project = {},
+      paymentLink = "",
+      milestones = [],
+      items = [],
+      status = "DRAFT", // Default status as 'draft'
+      preparedBy = {},
+      doc,
+      sgstAmount,
+      cgstAmount,
+      igstAmount,
+      sgstRate,
+      cgstRate,
+      igstRate,
+      selectedReviewers = [],
+    } = req.body;
+
+    // Ensure items is an array to avoid errors when mapping
+
+    const reviewedByData = Array.isArray(selectedReviewers)
+      ? selectedReviewers.map((item) => item._id) // Assuming item has _id property
+      : [];
+
+    const services = Array.isArray(items)
+      ? items.map((item) => ({
+          name: item?.name || "Unknown Service",
+          sac: item?.sac || "",
+          hours: item?.hours || 0,
+          rate: item?.rate || 0,
+          discountAmount: item?.discountAmount || 0,
+          taxableAmount: item?.taxableValue || 0,
+          sgstAmount,
+          cgstAmount,
+          igstAmount,
+          sgstRate,
+          cgstRate,
+          igstRate,
+        }))
+      : [];
+
+    const preparedByData = { ...preparedBy, createdAt: new Date() };
+
+    const invoiceData = {
+      invoiceNumber,
+      invoiceDate,
+      dueDate,
+      amountReceived,
+      previousDues,
+      currency,
+      clientId: business.id || null,
+      projectId: project.id || null,
+      paymentLink,
+      mileStones: milestones,
+      services,
+      status,
+      doc,
+      preparedBy: preparedByData,
+      reviewedBy: reviewedByData,
+    };
+
+    const newInvoice = await Invoice.create(invoiceData);
 
     res.status(201).json({
       status: "success",
@@ -68,7 +142,12 @@ export const createInvoice = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
+    console.error("Error creating invoice:", error);
+    res.status(500).json({
+      status: "error",
+      message: "An error occurred while creating the invoice.",
+      error: error.message || "Unknown error",
+    });
   }
 };
 
@@ -120,13 +199,13 @@ export const deleteInvoice = async (req, res, next) => {
 export const generateInvoiceData = async (req, res, next) => {
   try {
     const { id } = req.params;
-        const userEmail = req.headers["email"];
+    const userEmail = req.headers["email"];
 
-        if (!userEmail) {
-            return res.status(401).send({ error: "Email header missing" });
-        }
+    if (!userEmail) {
+      return res.status(401).send({ error: "Email header missing" });
+    }
 
-        console.log(userEmail);
+    console.log(userEmail);
 
     // Find the invoice by name
     const invoice = await Invoice.findById(id)
@@ -141,7 +220,6 @@ export const generateInvoiceData = async (req, res, next) => {
         .json({ status: "fail", message: "Invoice not found" });
     }
     console.log("This is invoice", invoice);
-    
 
     // Extract client details
     const client = await Client.findById(invoice.clientId);
@@ -285,18 +363,19 @@ export const generateInvoiceData = async (req, res, next) => {
       )} INR Only`,
       signatureAndSeal: "<signature & seal here>",
     };
-    console.log("This is invoiceFilledData", invoiceData)
+    console.log("This is invoiceFilledData", invoiceData);
 
     // mail logic
     const templatePath = path.resolve("utils", "mailTemplate.html");
     const templateSource = fs.readFileSync(templatePath, "utf-8");
     const template = handlebars.compile(templateSource);
     const filledTemplate = template(invoiceData);
-    
-    
-    const browser = await puppeteer.launch({   headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      timeout: 60000 });
+
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      timeout: 60000,
+    });
     const page = await browser.newPage();
     await page.setContent(filledTemplate);
     const pdfBuffer = await page.pdf({ format: "A4" });

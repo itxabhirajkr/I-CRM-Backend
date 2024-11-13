@@ -6,7 +6,7 @@ import validator from "validator";
 export const getAllClients = async (req, res, next) => {
   try {
     const features = new APIFeatures(
-      Client.find({ isDeleted: false }),
+      Client.find(),
       req.query
     )
       .filter()
@@ -19,7 +19,7 @@ export const getAllClients = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       results: clients.length,
-      data: {
+      data: { 
         clients,
       },
     });
@@ -88,7 +88,6 @@ export const createClient = [
     .toDate()
     .withMessage("Invalid service end date"),
   body("paymentTerms").notEmpty().withMessage("Payment Terms are required"),
-  body("currency").notEmpty().withMessage("Currency is required"),
 
   async (req, res, next) => {
     const errors = validationResult(req);
