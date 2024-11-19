@@ -28,7 +28,6 @@ export const getAllInvoices = async (req, res, next) => {
 
     const invoices = await features.query;
 
-    console.log(invoices, "sqi");
 
     res.status(200).json({
       status: "success",
@@ -87,14 +86,9 @@ export const createInvoice = async (req, res, next) => {
       sgstRate,
       cgstRate,
       igstRate,
-      selectedReviewers = [],
     } = req.body;
 
     // Ensure items is an array to avoid errors when mapping
-
-    const reviewedByData = Array.isArray(selectedReviewers)
-      ? selectedReviewers.map((item) => item._id) // Assuming item has _id property
-      : [];
 
     const services = Array.isArray(items)
       ? items.map((item) => ({
@@ -130,7 +124,6 @@ export const createInvoice = async (req, res, next) => {
       status,
       doc,
       preparedBy: preparedByData,
-      reviewedBy: reviewedByData,
     };
 
     const newInvoice = await Invoice.create(invoiceData);
@@ -152,11 +145,22 @@ export const createInvoice = async (req, res, next) => {
 };
 
 export const updateInvoice = async (req, res, next) => {
+  const { status, reviewedBy } = req.body;
   try {
-    const invoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updateData = {
+      status,
+    };
+
+    if (reviewedBy) {
+      updateData.$addToSet = { reviewedBy };
+    }
+    const invoice = await Invoice.findByIdAndUpdate(
+      req.params.invoiceId,
+      updateData,
+      {
+        new: true,
+      }
+    );
 
     if (!invoice) {
       return res.status(404).json({
@@ -205,7 +209,6 @@ export const generateInvoiceData = async (req, res, next) => {
       return res.status(401).send({ error: "Email header missing" });
     }
 
-    console.log(userEmail);
 
     // Find the invoice by name
     const invoice = await Invoice.findById(id)
@@ -219,21 +222,16 @@ export const generateInvoiceData = async (req, res, next) => {
         .status(404)
         .json({ status: "fail", message: "Invoice not found" });
     }
-    console.log("This is invoice", invoice);
 
     // Extract client details
     const client = await Client.findById(invoice.clientId);
 
-    console.log("This is client", client);
 
     // Extract project details
     const project = await Project.findById(invoice.projectId);
-    console.log("This is project", project);
     // Extract people details
     const preparedBy = await People.findById(invoice.preparedBy);
     const reviewedBy = await People.find({ _id: { $in: invoice.reviewedBy } });
-    console.log("This is preparedBy", preparedBy);
-    console.log("This is reviewedBy", reviewedBy);
     // Calculate previous dues
     const previousInvoices = await Invoice.find({
       clientId: client._id,
@@ -363,7 +361,6 @@ export const generateInvoiceData = async (req, res, next) => {
       )} INR Only`,
       signatureAndSeal: "<signature & seal here>",
     };
-    console.log("This is invoiceFilledData", invoiceData);
 
     // mail logic
     const templatePath = path.resolve("utils", "mailTemplate.html");

@@ -5,7 +5,6 @@ const { Schema, model } = mongoose;
 const gstinRegex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/;
 const countries = getCodeList();
 const iso2Codes = Object.keys(countries);
-console.log(iso2Codes);
 
 const clientSchema = new Schema({
   acquisitionPersonId: {

@@ -188,8 +188,8 @@ export const loginPerson = async (req, res) => {
           _id: person._id,
           firstName: person.displayName,
           lastName: person.lastName,
-          email: person.email,
-          userType: person.userType,
+          email: person.personalEmail,
+          userType: person.peopleType,
         },
         message: `User Login Success`,
       });

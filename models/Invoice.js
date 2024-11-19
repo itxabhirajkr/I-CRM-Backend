@@ -148,6 +148,9 @@ const invoiceSchema = new mongoose.Schema({
     enum: [
       "DRAFT",
       "FINALIZED",
+      "IN_REVIEW",
+      "REVIEWED_APPROVED",
+      "REVIEWED_CHANGE_REQUESTED",
       "DUE",
       "PAID",
       "PART_PAID_PART_DUE",
